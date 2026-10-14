@@ -1,0 +1,81 @@
+.request-flow.request-chat { color: #4b5566; }
+.request-flow.request-chat .request-flow-width { width: 600px; max-width: calc(100% - 40px); }
+.request-flow.request-chat .request-progress-header { padding: 23px 0 22px; }
+.request-flow.request-chat .request-progress-title { margin-bottom: 19px; }
+.request-flow.request-chat .request-progress-title h1 { font-size: 16px; line-height: 24px; font-weight: 600; color: #323744; }
+.request-flow.request-chat .request-progress-line { gap: 25px; }
+.request-flow.request-chat .request-progress-line>div { height: 4px; background: #eff0f4; }
+.request-flow.request-chat .request-flow-body { background: #f0f1f5; padding: 30px 0 60px; min-height: calc(100svh - 175px); }
+.request-flow.request-chat .request-greeting { display: flex; justify-content: flex-start; margin: 0 0 16px; }
+.request-flow.request-chat .request-greeting p {
+  position: relative;
+  display: inline-block;
+  max-width: 320px;
+  padding: 18px 20px;
+  background: #fff;
+  border-radius: 0 16px 16px 16px;
+  font-size: 14px;
+  line-height: 23px;
+  color: #8a93a1;
+}
+.request-flow.request-chat .request-greeting b { font-weight: 600; color: #5d687a; }
+.request-flow.request-chat .request-question {
+  position: relative;
+  width: 400px;
+  max-width: 100%;
+  padding: 22px 20px 24px;
+  border: 0;
+  border-radius: 0 16px 16px 16px;
+  background: #fff;
+  box-shadow: none;
+}
+.request-flow.request-chat .request-greeting p::before,
+.request-flow.request-chat .request-question::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -6px;
+  border-top: 7px solid #fff;
+  border-left: 6px solid transparent;
+  pointer-events: none;
+}
+.request-flow.request-chat .request-step-meta { display: none; }
+.request-flow.request-chat .request-question h2 { font-size: 16px; line-height: 24px; font-weight: 500; color: #4c5665; letter-spacing: -.01em; }
+.request-flow.request-chat .request-question-description { font-size: 12px; line-height: 20px; color: #9ba3b0; margin: 7px 0 22px; }
+.request-flow.request-chat .request-options { gap: 8px; }
+.request-flow.request-chat .request-option { padding: 15px 14px; min-height: 72px; gap: 12px; border: 1px solid #eceef3; border-radius: 8px; }
+.request-flow.request-chat .request-option b { font-size: 14px; line-height: 22px; font-weight: 500; color: #5d6879; }
+.request-flow.request-chat .request-option small { font-size: 12px; line-height: 19px; color: #8c96a6; margin-top: 2px; }
+.request-flow.request-chat .request-option input { width: 18px; height: 18px; border-color: #dce1e9; }
+.request-flow.request-chat .request-option.selected { border-color: #a78bdd; background: #fcfaff; }
+.request-flow.request-chat .request-option.selected b { color: #6d4da3; }
+.request-flow.request-chat .request-actions { margin-top: 22px; gap: 8px; }
+.request-flow.request-chat .request-primary { min-height: 48px; font-size: 14px; line-height: 22px; font-weight: 500; border-radius: 6px; }
+.request-flow.request-chat .request-primary:disabled { background: #e2e5ec; color: #b0b8c5; }
+.request-flow.request-chat .request-back { min-width: 73px; padding: 10px 13px; font-size: 13px; }
+.request-flow.request-chat .request-fields label { font-size: 13px; line-height: 21px; }
+.request-flow.request-chat .request-fields input,.request-flow.request-chat .request-fields select,.request-flow.request-chat .request-fields textarea { font-size: 14px; line-height: 23px; }
+.request-flow.request-chat .request-bottom-note { width: 400px; max-width: 100%; justify-content: center; font-size: 10px; line-height: 18px; color: #a6adba; }
+.request-flow.request-chat .request-selected-expert { width: 400px; max-width: 100%; background: #fff; border: 0; border-radius: 0 16px 16px 16px; padding: 14px 16px; margin-bottom: 16px; }
+.request-flow.request-chat .request-selected-expert b { font-size: 13px; line-height: 21px; }
+.request-flow.request-chat .request-selected-expert small { font-size: 11px; line-height: 18px; }
+.request-flow.request-chat .request-selected-expert a { font-size: 11px; }
+.request-flow.request-chat .request-review>div { grid-template-columns: 80px minmax(0,1fr) 26px; gap: 9px; font-size: 12px; line-height: 21px; }
+.request-flow.request-chat .request-review .request-expert-review { grid-template-columns: 80px minmax(0,1fr); }
+.request-flow.request-chat .request-consent { font-size: 12px; line-height: 21px; }
+.request-flow.request-chat .request-done h2 { font-size: 21px; line-height: 30px; font-weight: 600; }
+@media(max-width:700px) {
+ .request-flow.request-chat .request-flow-width { width: 400px; max-width: calc(100% - 36px); }
+ .request-flow.request-chat .request-flow-body { padding: 25px 0 45px; }
+ .request-flow.request-chat .request-progress-header { padding: 19px 0 18px; }
+ .request-flow.request-chat .request-progress-title h1 { font-size: 15px; line-height: 23px; }
+ .request-flow.request-chat .request-progress-title>a { font-size: 11px; }
+ .request-flow.request-chat .request-greeting p { font-size: 13px; line-height: 22px; padding: 15px 17px; max-width: 100%; }
+ .request-flow.request-chat .request-question { padding: 21px 18px 22px; }
+ .request-flow.request-chat .request-question h2 { font-size: 16px; line-height: 24px; }
+ .request-flow.request-chat .request-question-description { font-size: 12px; line-height: 20px; }
+ .request-flow.request-chat .request-option { padding: 14px 12px; min-height: 71px; gap: 10px; }
+ .request-flow.request-chat .request-option b { font-size: 14px; line-height: 22px; }
+ .request-flow.request-chat .request-option small { font-size: 12px; line-height: 19px; }
+ .request-flow.request-chat .request-fields input,.request-flow.request-chat .request-fields select,.request-flow.request-chat .request-fields textarea { font-size: 16px; }
+}

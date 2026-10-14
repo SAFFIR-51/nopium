@@ -1,0 +1,17 @@
+.market-product .product-copy { min-height: 112px; }
+.product-summary { display: grid; gap: 7px; margin-top: 10px; }
+.product-summary-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; }
+.product-summary .product-name { min-width: 0; font-size: 13px; line-height: 21px; font-weight: 500; color: #7c8798; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.product-summary .product-rating { margin: 0; flex-shrink: 0; }
+.product-summary .product-details { margin: 0; min-width: 0; font-size: 12px; line-height: 21px; }
+.product-summary .product-price { margin: 0; flex-shrink: 0; font-size: 17px; line-height: 25px; white-space: nowrap; }
+.product-summary .product-price small { font-size: 10px; }
+@media(max-width:700px) {
+ .market-product .product-copy { min-height: 102px; }
+ .product-summary { margin-top: 9px; gap: 6px; }
+ .product-summary-row { gap: 6px; }
+ .product-summary .product-name { font-size: 12px; line-height: 20px; }
+ .product-summary .product-details { font-size: 11px; line-height: 20px; }
+ .product-summary .product-price { font-size: 15px; line-height: 23px; }
+ .product-summary .product-price small { font-size: 9px; }
+}

@@ -1,0 +1,32 @@
+.quick-request {
+  border: 1px solid #e6ddf4;
+  background: linear-gradient(110deg, #faf9fd 0%, #f0eafb 28%, #e8e4fa 47%, #f5effc 68%, #faf9fd 100%);
+  background-size: 250% 100%;
+  animation: request-soft-gradient 7s ease-in-out infinite;
+  box-shadow: none;
+  transition: none;
+}
+
+.quick-request:hover {
+  border-color: #e6ddf4;
+  background-color: transparent;
+  background-image: linear-gradient(110deg, #faf9fd 0%, #f0eafb 28%, #e8e4fa 47%, #f5effc 68%, #faf9fd 100%);
+  background-size: 250% 100%;
+  box-shadow: none;
+}
+
+.quick-request:active { background-color: transparent; }
+.quick-request:focus-visible { outline: 2px solid #a887e7; outline-offset: 3px; }
+.quick-request::before, .quick-request::after { content: none; }
+.quick-request .request-sparkles { width: 19px; height: 19px; flex-shrink: 0; fill: none; stroke: none; }
+.quick-request .request-sparkle-main { fill: #7845ed; }
+.quick-request .request-sparkle-small { fill: #b59af0; }
+.quick-request .request-sparkle-small.second { display: none; }
+
+@keyframes request-soft-gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@media(max-width:700px) { .quick-request .request-sparkles { width: 18px; height: 18px; } }
+@media(prefers-reduced-motion:reduce) { .quick-request { animation: none; background-position: 50% 50%; } }

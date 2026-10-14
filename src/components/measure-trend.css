@@ -1,0 +1,17 @@
+.mt-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.mt-tabs button{height:30px;padding:0 12px;border:1px solid #e3e4e9;border-radius:999px;background:#fff;font-size:12px;color:#555b66;cursor:pointer}
+.mt-tabs button.on{border-color:#323232;background:#323232;color:#fff}
+.mt-summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-top:14px}
+.mt-summary b{font-size:24px;font-weight:700;color:#323232}
+.mt-summary span{font-size:13px;font-weight:600;color:#8a8f99}
+.mt-summary span.good{color:#2f8a57}
+.mt-summary span.bad{color:#c2413b}
+.mt-summary small{width:100%;font-size:12px;color:#9aa1ad}
+.mt-chart{display:flex;align-items:flex-end;gap:12px;height:140px;margin-top:12px;padding:0 2px 22px;border-bottom:1px solid #ececf0;position:relative}
+.mt-bar{flex:1;max-width:56px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}
+.mt-fill{width:100%;max-width:32px;border-radius:6px 6px 0 0;background:#d4c8fb}
+.mt-bar.last .mt-fill{background:#6935f5}
+.mt-val{font-size:11px;font-weight:600;color:#555b66;margin-bottom:4px}
+.mt-label{position:absolute;bottom:-20px;font-size:11px;color:#8a8f99;white-space:nowrap}
+.mt-note{font-size:11px;color:#a3a7b0;margin-top:26px;line-height:1.6}
+.mt-empty{font-size:13px;color:#8a8f99;margin-top:10px}

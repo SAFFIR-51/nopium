@@ -1,0 +1,56 @@
+/* Keep short referral pages above the footer for the initial viewport. */
+.nopium-home.referral-mode { min-height: calc(100svh - 72px); }
+
+/* Profile photographs replace initials; recommendation panels stay white. */
+.directory-v2 .directory-v2-recommend { background: none; border-radius: 0; padding-bottom: 0; }
+.directory-v2 .directory-recommend-card { background: #fff; border-color: #e8ebf0; box-shadow: none; border-radius: 12px; }
+.directory-avatar.directory-portrait,.expert-monogram.expert-portrait { position: relative; overflow: hidden; background: #f4f5f7; }
+.directory-portrait img,.expert-portrait img { object-fit: cover; object-position: center top; }
+.request-selected-expert>span.request-provider-photo { position: relative; overflow: hidden; border-radius: 50%; width: 40px; height: 40px; background: #f3f4f7; }
+.request-provider-photo img { object-fit: cover; object-position: center top; }
+
+/* Questions, option labels and descriptions use three readable type sizes. */
+.request-flow .request-flow-width { width: 500px; }
+.request-flow .request-flow-body { background: #f5f6f8; padding: 27px 0 60px; }
+.request-flow .request-greeting { display: block; margin-bottom: 17px; }
+.request-flow .request-greeting p { background: transparent; border-radius: 0; padding: 0 2px; font-size: 14px; line-height: 23px; color: #929baa; }
+.request-flow .request-greeting b { font-weight: 400; color: #6d788a; }
+.request-flow .request-question { padding: 29px 28px 27px; border: 1px solid #ebedf2; border-radius: 12px; box-shadow: none; }
+.request-flow .request-step-meta { font-size: 12px; line-height: 19px; letter-spacing: 0; margin-bottom: 10px; color: #a0a8b5; }
+.request-flow .request-question h2 { font-size: 24px; line-height: 34px; font-weight: 700; letter-spacing: -.025em; color: #323744; }
+.request-flow .request-question-description { font-size: 14px; line-height: 23px; color: #939daa; margin: 8px 0 23px; }
+.request-flow .request-options { gap: 10px; }
+.request-flow .request-option { gap: 13px; padding: 16px 15px; border-radius: 8px; border-color: #e5e9ef; }
+.request-flow .request-option b { font-size: 15px; line-height: 23px; font-weight: 600; color: #515e71; }
+.request-flow .request-option small { font-size: 13px; line-height: 21px; font-weight: 400; color: #9aa4b3; margin-top: 3px; }
+.request-flow .request-option.selected { background: #faf7ff; border-color: #aa8cde; }
+.request-flow .request-option.selected b { color: #7653ac; }
+.request-flow .request-primary { min-height: 48px; font-size: 14px; line-height: 22px; font-weight: 600; border-radius: 7px; }
+.request-flow .request-primary:disabled { background: #f0f1f4; color: #b6bdc8; }
+.request-flow .request-back { font-size: 13px; border-radius: 7px; }
+.request-flow .request-bottom-note { font-size: 11px; line-height: 19px; color: #a5adba; margin-top: 18px; }
+.request-flow .request-progress-title h1 { font-size: 17px; font-weight: 600; line-height: 26px; }
+.request-flow .request-progress-title>a { font-size: 12px; }
+.request-flow .request-progress-line>b { font-size: 12px; }
+.request-flow .request-fields label { font-size: 14px; line-height: 22px; font-weight: 500; color: #647287; }
+.request-flow .request-fields input,.request-flow .request-fields select,.request-flow .request-fields textarea { font-size: 15px; line-height: 24px; }
+.request-flow .request-input-help { font-size: 12px; line-height: 21px; color: #98a3b4; }
+.request-flow .request-review>div { font-size: 13px; line-height: 23px; }
+.request-flow .request-consent { font-size: 13px; line-height: 23px; }
+.request-flow .request-selected-expert b { font-size: 14px; line-height: 22px; font-weight: 600; }
+.request-flow .request-selected-expert small { font-size: 12px; line-height: 20px; }
+.request-flow .request-selected-expert a { font-size: 12px; }
+@media(max-width:700px) {
+ .nopium-home.referral-mode { min-height: calc(100svh - 61px); }
+ .request-flow .request-flow-body { padding: 23px 0 44px; }
+ .request-flow .request-greeting p { font-size: 13px; line-height: 22px; }
+ .request-flow .request-question { padding: 24px 20px; }
+ .request-flow .request-question h2 { font-size: 22px; line-height: 32px; }
+ .request-flow .request-question-description { font-size: 13px; line-height: 22px; margin-bottom: 21px; }
+ .request-flow .request-step-meta { font-size: 11px; line-height: 18px; }
+ .request-flow .request-option { padding: 15px 13px; gap: 11px; }
+ .request-flow .request-option b { font-size: 14px; line-height: 22px; }
+ .request-flow .request-option small { font-size: 12px; line-height: 20px; }
+ .request-flow .request-fields input,.request-flow .request-fields select,.request-flow .request-fields textarea { font-size: 16px; }
+ .request-flow .request-bottom-note { font-size: 10px; line-height: 18px; }
+}

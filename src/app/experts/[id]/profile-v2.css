@@ -1,0 +1,84 @@
+.expert-page{color:#323744;font-size:14px;line-height:1.6}
+.expert-container{width:1080px;max-width:calc(100% - 40px);margin:0 auto;padding:56px 0 65px}
+.expert-identity{display:flex;align-items:center;gap:12px}
+.expert-monogram{width:56px;height:56px;display:grid;place-items:center;border-radius:50%;background:#f0e9fb;color:#8a65c1;font-size:23px;font-weight:600;flex-shrink:0}
+.expert-tone-lee{background:#fcf0e0;color:#b08a5e}.expert-tone-choi{background:#edf5ee;color:#7ba189}.expert-tone-jung{background:#eaf0fb;color:#7a97bb}.expert-tone-han{background:#f9f2df;color:#ad9963}.expert-tone-oh{background:#faeaf4;color:#b883a3}
+.expert-identity-copy h1{font-size:24px;line-height:32px;font-weight:700;letter-spacing:-.025em;margin:0}
+.expert-rating{display:flex;align-items:center;gap:4px;font-size:14px;line-height:22px;margin-top:4px;color:#687180}
+.expert-rating svg{color:#ffbe36;fill:#ffbe36}.expert-rating b{font-weight:600;color:#4d5868}.expert-rating a{color:#647082}.expert-rating>span{margin-left:3px}
+.expert-save{width:50px;height:50px;display:grid;place-items:center;border:1px solid #e8eaef;border-radius:12px;color:#5e6673;margin-left:auto}
+.expert-save.saved{color:#6935f5;background:#f7f3ff;border-color:#d9c8f6}
+.expert-intro{font-size:14px;line-height:22px;font-weight:400;color:#8a929d;margin:18px 0 12px}
+.expert-profile-labels{display:flex;gap:6px;margin-bottom:20px}
+.expert-profile-labels>span{font-size:10px;line-height:17px;background:#f6f6f8;color:#9299a4;border-radius:4px;padding:2px 5px}
+.expert-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:calc(100% - 360px);margin-bottom:44px}
+.expert-gallery figure{position:relative;aspect-ratio:1;overflow:hidden;border-radius:14px;background:#f1f2f5}
+.expert-gallery img{object-fit:cover}
+.expert-gallery figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;font-size:10px;line-height:16px;color:#fff;background:linear-gradient(transparent,#0006)}
+.expert-columns{display:grid;grid-template-columns:minmax(0,1fr) 328px;gap:32px;align-items:start}
+.expert-main{min-width:0}
+.expert-notice{margin:0 0 21px;padding:13px 15px;background:#f7f8fa;border-radius:8px;font-size:13px;line-height:22px;color:#8a929d;font-weight:400}
+.expert-section-nav{display:flex;align-items:stretch;gap:23px;border-bottom:1px solid #eef0f3;background:#fff;position:sticky;top:72px;z-index:5;overflow-x:auto;scrollbar-width:none}
+.expert-section-nav a{font-size:16px;line-height:24px;font-weight:400;color:#a1a8b3;white-space:nowrap;padding:14px 0;flex-shrink:0;border-bottom:2px solid transparent}
+.expert-section-nav a[aria-current="location"]{color:#323744;border-bottom-color:#323744;font-weight:500}
+.expert-section{padding:32px 0;border-bottom:1px solid #eceef2;scroll-margin-top:135px}
+.expert-section h2{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.015em;margin:0 0 20px}
+.expert-section>p{font-size:14px;line-height:24px;font-weight:400;color:#737d8c;margin:0 0 16px}
+.expert-facts{display:grid;gap:15px;margin:0 0 36px}
+.expert-facts>div{display:flex;gap:18px;align-items:baseline;font-size:14px;line-height:22px}
+.expert-facts dt{width:65px;flex-shrink:0;color:#a0a7b2}
+.expert-facts dd{margin:0;color:#596575}
+.expert-section .expert-subsection-title{font-size:18px;line-height:26px;margin-top:30px;margin-bottom:15px}
+.expert-service-tags{display:flex;flex-wrap:wrap;gap:8px}
+.expert-service-tags span{font-size:14px;line-height:22px;color:#727e8f;border:1px solid #e4e8ef;border-radius:5px;padding:9px 13px}
+.expert-career{padding-top:33px;margin-top:33px;border-top:1px solid #eceef2}
+.expert-career h3{font-size:16px;line-height:24px;font-weight:700;margin:0 0 8px}
+.expert-career p{font-size:14px;line-height:24px;color:#7e8897;margin:0 0 10px}
+.expert-career-institution{color:#929baa!important}
+.expert-section .expert-caption{font-size:11px;line-height:19px;color:#a8afba;margin:12px 0 0}
+.expert-price-row{display:flex;justify-content:space-between;align-items:baseline;padding:17px 0;border-top:1px solid #eceef2;margin-top:25px;font-size:13px;color:#959ead}
+.expert-price-row b{font-size:18px;font-weight:600;color:#536071}
+.expert-price-row small{font-size:12px;font-weight:400;color:#a3abb8}
+.expert-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.expert-photo-grid figure>div{position:relative;aspect-ratio:1;overflow:hidden;border-radius:9px;background:#f3f4f6}
+.expert-photo-grid img{object-fit:cover}
+.expert-photo-grid figcaption{font-size:13px;line-height:20px;color:#7e8a9b;margin-top:9px}
+.expert-section-title{display:flex;justify-content:space-between;align-items:baseline}
+.expert-section-title>span{font-size:11px;color:#a1a9b6}
+.expert-review-score{display:flex;align-items:center;gap:17px;margin:4px 0 25px}
+.expert-review-score>b{font-size:42px;line-height:52px;font-weight:700;color:#323744}
+.expert-review-score>div>span:last-child{font-size:12px;color:#969fad;display:block;margin-top:5px}
+.expert-review-stars{display:flex;gap:3px;color:#ffc044}
+.expert-review-stars svg{fill:#ffc044}
+.expert-review{padding:23px 0;border-top:1px solid #eff1f4}
+.expert-review>b{font-size:14px;line-height:22px;font-weight:600;color:#515d6e}
+.expert-review>span{font-size:10px;line-height:17px;color:#a8afbb;margin-left:12px}
+.expert-review>p{font-size:14px;line-height:24px;color:#738094;margin-top:11px}
+.expert-answer{margin-bottom:25px}
+.expert-answer:last-child{margin-bottom:0}
+.expert-answer h3{font-size:14px;line-height:23px;font-weight:600;color:#5b6676;margin:0 0 9px}
+.expert-answer p{font-size:14px;line-height:24px;color:#8994a5;margin:0}
+.expert-booking{position:sticky;top:96px}
+.expert-booking>div{border:1px solid #e9ecf1;border-radius:17px;padding:22px 20px}
+.expert-booking>div>p{font-size:16px;line-height:25px;color:#596474;font-weight:400;margin:0}
+.expert-booking>div>p b{font-weight:600;color:#4e5a6b}
+.expert-apply{display:flex;align-items:center;justify-content:center;background:#6935f5;border-radius:10px;min-height:50px;color:#fff;font-size:16px;line-height:24px;font-weight:600;margin-top:18px}
+.expert-apply:hover{background:#5928db}
+.expert-booking-note{font-size:11px;line-height:19px;color:#a3acb9;text-align:center;margin:15px 12px 0}
+.expert-mobile-apply{display:none}
+@media(max-width:1000px){.expert-columns{grid-template-columns:minmax(0,1fr) 286px;gap:26px}.expert-gallery{width:calc(100% - 312px)}.expert-section-nav{gap:19px}.expert-section-nav a{font-size:14px}.expert-booking>div{padding:20px 17px}.expert-booking>div>p{font-size:14px}.expert-apply{font-size:14px}}
+@media(max-width:700px){
+ .expert-container{max-width:calc(100% - 32px);padding:31px 0 105px}
+ .expert-identity{gap:11px}.expert-monogram{width:52px;height:52px;font-size:23px}.expert-identity-copy h1{font-size:23px;line-height:31px}.expert-rating{font-size:12px;line-height:19px;gap:3px}.expert-rating svg{width:14px;height:14px}.expert-save{width:42px;height:42px;border-radius:10px}
+ .expert-intro{font-size:13px;line-height:22px;margin:18px 0 11px}.expert-profile-labels{margin-bottom:18px}
+ .expert-gallery{width:100%;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:27px;scroll-snap-type:x mandatory}
+ .expert-gallery figure{aspect-ratio:1;flex:0 0 48%;border-radius:12px;scroll-snap-align:start}.expert-gallery figcaption{font-size:9px;line-height:15px;padding:18px 8px 7px}
+ .expert-columns{display:block}.expert-notice{font-size:12px;line-height:20px;padding:12px 13px;margin-bottom:15px}
+ .expert-section-nav{top:61px;gap:22px;margin-right:-16px;padding-right:16px}.expert-section-nav a{font-size:14px;line-height:22px;padding:14px 0}
+ .expert-section{padding:28px 0;scroll-margin-top:119px}.expert-section h2{font-size:19px;line-height:27px;margin-bottom:18px}.expert-section>p{font-size:14px;line-height:24px;margin-bottom:15px}
+ .expert-facts{gap:13px;margin-bottom:29px}.expert-facts>div{font-size:13px;line-height:21px}.expert-facts dt{width:57px}.expert-section .expert-subsection-title{font-size:18px}.expert-service-tags span{font-size:13px;padding:8px 11px}
+ .expert-career{margin-top:27px;padding-top:27px}.expert-career p{font-size:13px;line-height:23px}.expert-caption{font-size:10px!important}
+ .expert-photo-grid{gap:9px}.expert-photo-grid figcaption{font-size:11px;line-height:18px}.expert-review-score>b{font-size:38px}.expert-review>p,.expert-answer p{font-size:13px;line-height:23px}
+ .expert-booking{display:none}.expert-mobile-apply{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid #eceef3;background:#fff;padding:13px 16px calc(13px + env(safe-area-inset-bottom))}
+ .expert-mobile-apply>span{font-size:17px;font-weight:600;white-space:nowrap;color:#505d70}.expert-mobile-apply small{font-size:10px;font-weight:400;color:#a0aaba}.expert-mobile-apply>a{padding:13px 25px;background:#6935f5;border-radius:8px;color:#fff;font-size:14px;font-weight:600;min-width:140px;text-align:center}
+}

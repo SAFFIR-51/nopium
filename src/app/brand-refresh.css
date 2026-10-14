@@ -1,0 +1,25 @@
+.reference-header .logo img,.footer-logo img {
+  width: 92px !important;
+  height: 21px !important;
+  object-fit: contain;
+}
+
+.brand-masthead { gap: 19px; }
+.masthead-photo {
+  width: 126px;
+  height: 104px;
+  border-radius: 0;
+  opacity: 1;
+  background: transparent;
+}
+.masthead-photo img {
+  object-fit: cover;
+  object-position: center top;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+@media(max-width:700px) {
+  .reference-header .logo img { width: 85px !important; height: 20px !important; }
+  .masthead-photo { width: 98px; height: 107px; right: 15px; bottom: 16px; opacity: 1; }
+}

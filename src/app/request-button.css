@@ -1,0 +1,57 @@
+@property --request-border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.quick-request {
+  position: relative;
+  isolation: isolate;
+  background: #f8f7fc;
+  box-shadow: 0 1px 6px #6736ef06;
+  transition: background .2s, box-shadow .2s;
+}
+
+.quick-request::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.4px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--request-border-angle), #e8e4f3 0deg, #e8e4f3 220deg, #b9a0ff 260deg, #7437ff 295deg, #b8baff 325deg, #e8e4f3 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: request-border-orbit 3.8s linear infinite;
+}
+
+.quick-request:hover {
+  background: #f4f0ff;
+  box-shadow: 0 0 15px #7542eb18;
+}
+
+.quick-request:hover::before { animation-duration: 2.1s; }
+.quick-request:focus-visible { outline: 2px solid #8656f5; outline-offset: 3px; }
+.quick-request .request-sparkles { width: 21px; height: 21px; flex-shrink: 0; fill: none; stroke: none; overflow: visible; }
+.request-sparkle-main, .request-sparkle-small { transform-box: fill-box; transform-origin: center; }
+.request-sparkle-main { animation: request-star-drift 3.8s ease-in-out infinite; }
+.request-sparkle-small { animation: request-star-twinkle 2.8s ease-in-out infinite; }
+.request-sparkle-small.second { animation-delay: -1.4s; }
+
+@keyframes request-border-orbit { to { --request-border-angle: 360deg; } }
+@keyframes request-star-drift {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  50% { transform: translateY(-1px) rotate(-12deg) scale(1.09); }
+}
+@keyframes request-star-twinkle {
+  0%, 100% { opacity: .55; transform: scale(.78); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@media(max-width:700px) { .quick-request .request-sparkles { width: 19px; height: 19px; } }
+@media(prefers-reduced-motion:reduce) {
+  .quick-request::before, .request-sparkle-main, .request-sparkle-small { animation: none; }
+  .quick-request { transition: none; }
+}

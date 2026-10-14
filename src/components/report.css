@@ -1,0 +1,16 @@
+/* 월간 보고서 표 */
+.report-table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 4px}
+.report-table th{text-align:left;font-size:11px;font-weight:500;color:#8a929e;padding:7px 8px;background:#f6f7f9}
+.report-table td{padding:8px;border-bottom:1px solid #f0f1f4}
+.report-table td small{color:#a3a7b0;font-size:11px;margin-left:4px}
+.report-list{margin:4px 0 0;padding-left:18px;font-size:13px;line-height:1.8}
+.report-summary b small{font-size:11px;font-weight:400;color:#8a929e}
+
+/* 쌓인 데이터 요약 */
+.data-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.data-stats>div{padding:14px 16px;border-radius:11px;background:#f6f9f6}
+.data-stats small{display:block;font-size:11px;color:#7d8c83}
+.data-stats b{display:block;font-size:24px;font-weight:650;color:#314b3f;margin:5px 0 2px}
+.data-stats b em{font-style:normal;font-size:12px;font-weight:400;margin-left:3px}
+.data-stats span{font-size:10px;color:#9aa59e}
+@media(max-width:640px){.data-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.data-stats b{font-size:20px}}

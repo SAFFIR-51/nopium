@@ -1,0 +1,119 @@
+.business-work.workspace.role-tabs.manage{padding:0 max(24px,calc((100% - 1180px)/2))!important;background:#f7f8fa!important;min-height:calc(100svh - 72px)}
+.business-work .workspace-content{max-width:none!important;width:100%;padding:0 0 64px!important;margin:0}
+.business-work .manage-band{margin-bottom:30px}
+.business-work .work-head{padding:26px 0 4px;gap:0}
+.business-work .work-title{font-size:11px;font-weight:500;color:#858b96}
+.business-work .work-person{font-size:20px;font-weight:650;line-height:1.5;display:flex;align-items:baseline;flex-wrap:wrap;gap:12px}
+.business-work .work-person small{font-size:12px;font-weight:400}
+.business-work .work-role{background:none;padding:0;color:#727783;font-size:12px;font-weight:400}
+.business-work .manage-band .work-tabs{gap:30px;margin-top:14px}
+.business-work .manage-band .work-tabs a{font-size:13px;padding:13px 0}
+.business-work .manage-band .work-tabs a.active{font-weight:650}
+.business-work .dashboard-title{margin:0 0 24px;align-items:center}
+.business-work .dashboard-title .eyebrow{display:none}
+.business-work .dashboard-title h1{font-size:22px!important;font-weight:650}
+.business-work .dashboard-title p:not(.eyebrow){font-size:12px;line-height:1.7;color:#727783;margin-top:5px}
+.business-work .btn-primary,.business-work .btn-ghost,.business-work .sg-btn{border-radius:4px;font-size:12px;font-weight:550;min-height:32px;box-shadow:none}
+.business-work .sg.sg-work{max-width:none;padding:0}
+.business-work .admin-overview .sg-head h1{font-size:22px;font-weight:650}
+.business-work .admin-overview .sg-title{margin:28px 0 12px;font-size:14px;font-weight:650}
+.business-work .admin-work-summary,.business-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;border:1px solid #dfe3e9;border-radius:4px;padding:18px 0;margin-bottom:24px}
+.business-work .admin-work-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+.business-summary>div,.business-work .admin-work-summary>a{padding:0 20px;border-left:1px solid #e5e8ee}
+.business-summary>div:first-child{border-left:0}
+.business-summary small{display:block;font-size:12px;color:#727783;line-height:1.5}
+.business-summary b{display:block;font-size:24px;font-weight:650;margin-top:7px;line-height:1.3;font-variant-numeric:tabular-nums}
+.business-summary b span{font-size:12px;color:#727783;font-weight:400;margin-left:5px}
+.business-section{margin-bottom:28px}
+.business-section-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.business-section-head h2{font-size:14px;font-weight:650;line-height:1.5}
+.business-section-head>span,.business-result{font-size:12px;color:#7a818e}
+.business-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.business-filter{display:flex;gap:0;border:1px solid #dfe3e9;border-radius:4px;background:#fff;overflow:hidden}
+.business-filter button{padding:9px 13px;font-size:12px;color:#5f6673;background:#fff;border-left:1px solid #e5e8ee;white-space:nowrap;cursor:pointer}
+.business-filter button:first-child{border-left:0}
+.business-filter button[aria-pressed=true]{background:#f0ebff;color:#5a2fc5;font-weight:600}
+.business-filter button span{font-variant-numeric:tabular-nums;margin-left:4px;color:#858b96;font-size:11px}
+.business-controls{display:flex;gap:8px;flex-wrap:wrap}
+.business-controls input,.business-controls select{height:34px;border:1px solid #d8dde5;background:#fff;border-radius:4px;padding:0 10px;font-size:12px;color:#303744}
+.business-controls input{width:225px}
+.business-result{margin-bottom:10px}
+.business-table-scroll{width:100%;overflow:auto;border:1px solid #dfe3e9;border-radius:4px;background:#fff;max-height:560px}
+.business-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;text-align:left;line-height:1.6}
+.business-table th{position:sticky;top:0;z-index:1;background:#f0f2f5;color:#525a68;font-size:11px;font-weight:600;white-space:nowrap;padding:11px 14px;border-bottom:1px solid #dfe3e9;border-right:1px solid #e3e6eb}
+.business-table td{padding:12px 14px;vertical-align:middle;border-bottom:1px solid #e7eaf0;border-right:1px solid #edf0f4;color:#353d4b;min-width:90px}
+.business-table td:last-child,.business-table th:last-child{border-right:0}
+.business-table tr:last-child td{border-bottom:0}
+.business-table tbody tr:nth-child(even){background:#fcfcfe}
+.business-table tbody tr:hover{background:#f5f3fc}
+.business-table td b{font-weight:600;color:#242c39;white-space:nowrap}
+.business-table td small{display:block;font-size:11px;line-height:1.6;color:#7d8490;margin-top:2px}
+.business-table td.business-number{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;min-width:64px}
+.business-table td.business-nowrap{white-space:nowrap}
+.business-table td.business-wrap{min-width:180px;max-width:280px;word-break:keep-all}
+.business-table td.business-empty{text-align:center;padding:42px 16px;color:#858b96}
+.business-status{display:inline-block;font-size:11px;padding:3px 7px;line-height:1.5;white-space:nowrap;border-radius:3px;font-weight:500;background:#eef0f4;color:#69717e}
+.business-status.active{background:#eaf4ef;color:#277351}
+.business-status.waiting{background:#f2edff;color:#6340af}
+.business-status.attention{background:#fff0e5;color:#a76028}
+.business-action{display:inline-flex;align-items:center;justify-content:center;min-height:29px;border:1px solid #d9dde5;background:#fff;padding:4px 10px;border-radius:3px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;color:#414b5d}
+.business-action:hover{border-color:#9a83dc;color:#6438c5}
+.business-action.primary{background:#6935f5;border-color:#6935f5;color:#fff}
+.business-action:disabled{color:#aab0bb;background:#f5f6f8;border-color:#e4e7ec;cursor:not-allowed}
+.business-actions{display:flex;gap:6px}
+.business-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.business-work .admin-overview .sg-card{border-radius:4px;border-color:#dfe3e9}
+@media(max-width:700px){
+ .business-work.workspace.role-tabs.manage{padding:0 16px!important}
+ .business-work .work-person{font-size:18px;gap:5px 10px}
+ .business-work .dashboard-title{flex-wrap:wrap;gap:12px}
+ .business-work .manage-band .work-tabs{gap:24px}
+ .business-summary{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}
+ .business-summary>div:nth-child(3){border-left:0}
+ .business-summary>div{padding:0 16px}
+ .business-controls{width:100%}
+ .business-controls input{flex:1;min-width:160px;width:auto}
+ .business-filter{max-width:100%;overflow:auto}
+ .business-filter button{padding:8px 10px}
+ .business-table{min-width:850px}
+ .business-work .admin-work-summary>a{padding:0 12px}
+}
+
+/* Hospital registry and its detail sheet use the same compact office layout. */
+.hospital-registry .business-summary{padding:12px 0;border-radius:3px;margin-bottom:20px}
+.hospital-registry .business-summary>div{display:flex;align-items:baseline;gap:12px}
+.hospital-registry .business-summary b{font-size:18px;margin:0}
+.hospital-register-sheet{background:transparent;border:0;border-radius:0;padding:0}
+.hospital-register-sheet .business-toolbar{padding-bottom:16px;border-bottom:1px solid #eceef2;margin-bottom:16px}
+.hospital-register-sheet .business-section-head{justify-content:space-between;margin-bottom:10px}
+.hospital-register-sheet .business-table td{padding:10px 12px}
+.modal:has(.hospital-review){border-radius:6px;padding:24px;max-width:800px}
+.modal:has(.hospital-review) .modal-head{padding-bottom:16px;border-bottom:1px solid #e3e6ec;margin-bottom:20px}
+.modal:has(.hospital-review) .modal-head h2{font-size:20px;font-weight:650}
+.hospital-review{color:#353d4b}
+.hospital-review-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.hospital-review-heading h3{font-size:13px;font-weight:600}
+.hospital-review-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #dfe3e9;border-left:1px solid #dfe3e9;margin-bottom:20px}
+.hospital-review-grid>div{display:grid;grid-template-columns:100px minmax(0,1fr);border-bottom:1px solid #dfe3e9;border-right:1px solid #dfe3e9;font-size:12px;line-height:1.7}
+.hospital-review-grid>div.full{grid-column:1/-1}
+.hospital-review-grid dt{background:#f0f2f5;padding:10px 12px;color:#727783;border-right:1px solid #e3e6eb}
+.hospital-review-grid dd{margin:0;padding:10px 12px;word-break:keep-all}
+.hospital-review-history{font-size:11px;line-height:1.7;color:#727783;padding:10px 12px;background:#f7f8fa;border-left:2px solid #cbd1db;margin-bottom:18px}
+.hospital-review .care-label{font-size:12px;font-weight:600;margin:16px 0}
+.hospital-review textarea{border:1px solid #d9dde5;border-radius:3px;background:#fff;font-size:13px;font-weight:400;line-height:1.7;resize:vertical;padding:10px 12px}
+.hospital-review .modal-actions{padding-top:16px;margin-top:20px;border-top:1px solid #e3e6ec}
+.hospital-review .btn-primary,.hospital-review .btn-ghost{border-radius:3px;font-size:12px;min-height:34px}
+@media(max-width:700px){
+ .hospital-registry .business-summary>div{gap:8px}
+ .hospital-register-sheet{padding:0}
+ .hospital-review-grid{grid-template-columns:1fr}
+ .modal:has(.hospital-review){padding:18px}
+ .hospital-review-grid>div{grid-template-columns:90px minmax(0,1fr)}
+}
+
+.business-table td.business-session-count{text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums;min-width:64px}
+
+.business-name-link{display:inline;color:#5132a1;font-size:inherit;line-height:inherit;font-weight:600;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:#d7ccef;text-underline-offset:3px}
+.business-name-link:hover{color:#6935f5;text-decoration-color:currentColor}
+.business-name-link:focus-visible{outline:2px solid #6935f5;outline-offset:3px;border-radius:2px}
+.care-modal:has(.hospital-review){border-radius:6px}

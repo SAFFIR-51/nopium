@@ -1,0 +1,182 @@
+/*
+ * 내 관리 목록형 UI (모든 역할 공통)
+ * 참고: 숨고 "받은 견적"(회색 바탕·좁은 한 열·카드 밖 섹션 제목), 에어비앤비 호스트 Today(급한 일 → 다가오는 일 → 다음 할 일 순서),
+ * 애플 건강 요약(최근 값 + 한 문장 하이라이트), 토스 UX 라이팅(짧게, 버튼은 "~하기").
+ */
+.manage{--m-bg:#f2f3f6}
+.sg{max-width:600px;margin:0 auto;padding:36px 0 40px;color:#1f2330}
+.sg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sg-head h1{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.sg-head-link{display:inline-flex;align-items:center;gap:3px;font-size:13px;color:#6b7280}
+.sg-head-link:hover{color:#6935f5}
+.sg .my-picker{margin-bottom:8px}
+.sg .my-picker-btn{border:0;min-width:240px}
+.sg-notice{margin-top:12px;padding:4px 16px;border-radius:12px;background:#f1ecff}
+.sg-notice-row{display:flex;align-items:center;gap:8px;padding:11px 0;font-size:13px;color:#3b2a85}
+.sg-notice-row+.sg-notice-row{border-top:1px solid rgba(105,53,245,.12)}
+.sg-notice-row>svg{flex-shrink:0;color:#6935f5}
+.sg-notice-row>span{flex:1;min-width:0}
+.sg-notice-row a,.sg-notice-row button{display:inline-flex;align-items:center;gap:1px;font-size:12px;font-weight:700;color:#6935f5;white-space:nowrap;cursor:pointer}
+.sg-title{display:flex;align-items:center;gap:6px;margin:34px 0 12px;font-size:16px;font-weight:750;letter-spacing:-.02em}
+.sg-title span{font-size:14px;font-weight:700;color:#6935f5}
+.sg-sub{margin:-8px 0 12px;font-size:12px;color:#8a8f99}
+.sg-card{display:block;margin-bottom:8px;padding:18px 18px;border-radius:12px;background:#fff}
+.sg-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;color:inherit;cursor:pointer;background:none;padding:0}
+.sg-row.static{cursor:default}
+.sg-row>span:first-child{display:grid;gap:3px;min-width:0}
+.sg-row b{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.sg-row b.sg-big{font-size:19px;font-weight:800}
+.sg-row small{font-size:12px;color:#8a8f99}
+.sg-row small.sg-state{font-size:11px;font-weight:600;color:#6b7280}
+.sg-state.on{color:#6935f5!important}
+.sg-state.warn{color:#d97706!important}
+.sg-state.off{color:#9aa1ad!important}
+.sg-right{display:inline-flex;align-items:center;gap:1px;flex-shrink:0;font-size:13px;font-weight:700;color:#1f2330}
+.sg-right svg{color:#b6bbc6}
+.sg-right.plain{font-weight:600;color:#6b7280}
+.sg-divider{height:1px;background:#eef0f3;margin:14px 0}
+.sg-person{display:flex;align-items:center;gap:8px;font-size:13px;color:#4b5563}
+.sg-person img,.sg-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.sg-avatar{display:grid;place-items:center;background:#f1ecff;color:#6935f5;font-size:12px;font-weight:700}
+.sg-chat{margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:8px;background:#6935f5;color:#fff;font-size:13px;font-weight:700}
+.sg-chat em{font-style:normal;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#fff;color:#6935f5;font-size:10px;display:inline-grid;place-items:center}
+.sg-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.sg-actions button{height:40px;border:1px solid #e3e6ec;border-radius:8px;background:#fff;font-size:13px;font-weight:600;cursor:pointer}
+.sg-actions button:hover{background:#f7f8fa}
+.sg-change{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:12px;padding:10px 12px;border-radius:8px;background:#f6f7f9;font-size:12px;color:#4b5563}
+.sg-change.warn{background:#fff6e8;color:#9a5b12}
+.sg-change button,.sg-change a{margin-left:auto;font-size:12px;font-weight:700;color:#6935f5;cursor:pointer}
+.sg-measures{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:#6b7280}
+.sg-measures b{color:#1f2330;font-weight:700;margin-left:2px}
+.sg-measures i{font-style:normal;font-weight:700;margin-left:3px}
+.sg-measures i.up{color:#12a06a}.sg-measures i.down{color:#e5484d}
+.sg-adverse{color:#d97706;font-weight:600}
+.sg-more{display:block;margin-top:4px;padding:13px;border-radius:12px;background:#fff;text-align:center;font-size:13px;font-weight:600}
+.sg-empty{font-size:13px;color:#8a8f99;text-align:center;padding:28px 18px}
+.sg-progress{height:6px;margin:14px 0 12px;border-radius:6px;background:#eef0f3;overflow:hidden}
+.sg-progress span{display:block;height:100%;border-radius:6px;background:#6935f5}
+.sg-facts{display:grid;gap:6px;font-size:13px}
+.sg-facts>div{display:grid;grid-template-columns:64px 1fr;gap:8px}
+.sg-facts dt{color:#8a8f99}
+.sg-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.sg-quick a{font-size:12px;padding:7px 11px;border-radius:999px;background:#f4f5f8;color:#4b5563}
+.sg-quick a:hover{background:#f1ecff;color:#6935f5}
+.sg-list{padding:4px 18px}
+.sg-list>a,.sg-list>button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:14px 0;text-align:left;cursor:pointer;background:none;color:inherit}
+.sg-list>*+*{border-top:1px solid #eef0f3}
+.sg-list b{display:block;font-size:14px;font-weight:600}
+.sg-list small{display:block;font-size:12px;color:#8a8f99;margin-top:2px}
+.sg-list svg{flex-shrink:0;color:#b6bbc6}
+.sg-foot{margin-top:12px;font-size:12px;color:#9aa1ad;text-align:center}
+.sg .measure-trend,.sg .mt{margin:0}
+@media(max-width:640px){.sg{padding:22px 0 30px}.sg-head h1{font-size:21px}.sg .my-picker,.sg .my-picker-btn{width:100%}.sg-card{padding:16px}.sg-row b.sg-big{font-size:17px}}
+
+/* 업무 역할(선생님·병원·운영)도 같은 좁은 열. 상단 띠와 본문 폭을 맞춥니다. */
+.workspace.role-tabs.manage{padding:0 max(16px,calc((100% - 720px)/2))!important}
+.sg.sg-work{max-width:none;padding-top:4px}
+.manage .dash-grid{grid-template-columns:minmax(0,1fr)!important;gap:0}
+.manage .dash-stack{display:block}
+.sg-head-link{background:none;cursor:pointer}
+.sg-btn{flex-shrink:0;display:inline-flex;align-items:center;height:34px;padding:0 13px;border-radius:8px;border:1px solid #e3e6ec;background:#fff;font-size:13px;font-weight:700;color:#1f2330;cursor:pointer;white-space:nowrap}
+.sg-btn:hover{background:#f7f8fa}
+.sg-btn.primary{background:#6935f5;border-color:#6935f5;color:#fff}
+.sg-btn.primary:hover{background:#5326e0}
+.sg-actions a,.sg-actions button{display:grid;place-items:center;height:40px;border:1px solid #e3e6ec;border-radius:8px;background:#fff;font-size:13px;font-weight:600;color:#1f2330;cursor:pointer}
+.sg-actions .primary{background:#6935f5;border-color:#6935f5;color:#fff}
+.sg-actions .primary:hover{background:#5326e0}
+.sg-actions button:disabled{opacity:.45;cursor:default}
+.sg-caution{display:flex;gap:6px;align-items:flex-start;font-size:12px;line-height:1.6;color:#6b7280}
+.sg-caution svg{flex-shrink:0;margin-top:2px;color:#9aa1ad}
+.sg-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.sg-stats.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.sg-stats>div{padding:2px 0 2px 14px;border-left:1px solid #eef0f3}
+.sg-stats>div:first-child{padding-left:0;border-left:0}
+.sg-stats small{display:block;font-size:12px;color:#8a8f99}
+.sg-stats b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.sg-stats b em{font-style:normal;font-size:12px;font-weight:600;color:#9aa1ad;margin-left:2px}
+.sg-highlight{margin-top:14px;padding-top:14px;border-top:1px solid #eef0f3;font-size:13px;color:#4b5563;line-height:1.6}
+.sg-list-static{display:flex;align-items:center;padding:14px 0}
+.sg-list-static b{display:block;font-size:14px;font-weight:600}
+.sg-list-static small{display:block;font-size:12px;color:#8a8f99;margin-top:2px}
+@media(max-width:640px){.sg-stats.four{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}.sg-stats.four>div:nth-child(3){padding-left:0;border-left:0}.sg-row.static{flex-wrap:wrap}.sg-row.static>.sg-btn{width:100%;justify-content:center;height:40px}}
+.sg-highlight.top{margin:0 0 16px;padding:0;border:0;font-size:15px;font-weight:700;color:#1f2330}
+.manage .detail-grid{display:flex!important;flex-direction:column}.manage .detail-grid>.dash-stack{order:-1}
+
+/* 보호자 홈(허브) */
+.sg-h1{font-size:24px;font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+.sg-profile{display:flex;align-items:center;gap:12px;padding:16px 18px;margin-bottom:8px;border-radius:12px;background:#fff}
+.sg-profile-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#f1ecff;color:#6935f5;font-size:17px;font-weight:800;flex-shrink:0}
+.sg-profile>div{flex:1;min-width:0}
+.sg-profile b{display:block;font-size:16px;font-weight:750}
+.sg-profile small{display:block;font-size:12px;color:#8a8f99;margin-top:2px}
+.sg .my-picker-btn{width:100%;border-radius:12px}
+.sg .my-picker{display:block;margin-bottom:8px}
+.sg-feature{margin-top:12px}
+.sg-progress-label{display:flex;justify-content:space-between;font-size:12px;color:#8a8f99}
+.sg-progress-label b{color:#1f2330}
+.sg-quick-menu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:14px 8px;border-radius:12px;background:#fff;margin-bottom:8px}
+.sg-quick-menu a{display:grid;justify-items:center;gap:6px;padding:6px 0;border-radius:10px;font-size:13px;font-weight:600;color:#1f2330}
+.sg-quick-menu a:hover{background:#f7f8fa}
+.sg-qicon{position:relative;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#f4f5f8;color:#4b5563}
+.sg-qicon em{position:absolute;top:-4px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#6935f5;color:#fff;font-style:normal;font-size:10px;font-weight:800;display:grid;place-items:center}
+.sg-row-end{display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
+.sg-badge{font-style:normal;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:#f1ecff;color:#6935f5}
+.sg-check{display:grid;gap:8px;font-size:13px;color:#4b5563;list-style:none}
+.sg-check li{display:flex;gap:6px;align-items:flex-start}
+.sg-check svg{flex-shrink:0;margin-top:3px;color:#6935f5}
+.sg-more.inline{width:100%;margin-top:12px;padding:10px;border:1px solid #e3e6ec;cursor:pointer}
+.sg-report .src{border:0;padding:0;margin:0;box-shadow:none;background:none}
+.sg .my-subheader{margin-bottom:16px}
+.sg-empty a{color:#6935f5;font-weight:600;margin-left:4px}
+/* 하위 화면(신청 현황·정보 공유): 기존 카드도 같은 열·같은 카드 모양으로 */
+.sg-sub-page .my-card,.sg-sub-page .care-panel{border:0;border-radius:12px;box-shadow:none;margin-bottom:8px}
+
+/* 프로그램 6단계 */
+.stage-steps ol{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));list-style:none;counter-reset:s;position:relative}
+.stage-steps li{position:relative;display:grid;justify-items:center;gap:6px;text-align:center;font-size:11px;color:#9aa1ad}
+.stage-steps li:before{content:"";position:absolute;top:11px;left:-50%;right:50%;height:2px;background:#e6e8ee;z-index:0}
+.stage-steps li:first-child:before{display:none}
+.stage-steps li.done:before,.stage-steps li.now:before{background:#6935f5}
+.stage-dot{position:relative;z-index:1;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#f0f1f4;color:#8a8f99;font-size:11px;font-weight:700}
+.stage-steps li.done .stage-dot{background:#6935f5;color:#fff}
+.stage-steps li.now .stage-dot{background:#fff;color:#6935f5;box-shadow:0 0 0 2px #6935f5}
+.stage-steps li.now .stage-name{color:#1f2330;font-weight:700}
+.stage-name{line-height:1.3;word-break:keep-all}
+.stage-todo{margin-top:12px;padding:10px 12px;border-radius:8px;background:#f6f7f9;font-size:13px;color:#4b5563}
+.stage-todo b{color:#6935f5;margin-right:4px}
+.stage-steps.compact{margin-top:14px}
+.stage-steps.compact .stage-name{font-size:10px}
+@media(max-width:640px){.stage-name{font-size:10px}.stage-dot{width:22px;height:22px}.stage-steps li:before{top:10px}}
+.sg-rx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.sg-rx>div{padding:10px 12px;border-radius:8px;background:#f6f7f9}
+.sg-rx small{display:block;font-size:11px;color:#8a8f99}
+.sg-rx b{display:block;font-size:13px;margin-top:2px}
+@media(max-width:640px){.sg-rx{grid-template-columns:1fr 1fr}}
+.rx-assess{margin:12px 0;padding:12px 14px;border-radius:10px;background:#f6f7f9;font-size:13px;color:#4b5563;display:grid;gap:4px}
+.rx-assess b{color:#1f2330}
+.sg-filter{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
+.sg-filter button{flex-shrink:0;height:32px;padding:0 12px;border-radius:999px;background:#fff;font-size:12px;font-weight:600;color:#4b5563;cursor:pointer}
+.sg-filter button.on{background:#1f2330;color:#fff}
+.sg-link{font-size:13px;font-weight:600;color:#6935f5;cursor:pointer;background:none}
+.sg-inline-form{display:flex;gap:8px;margin-top:12px}
+.sg-inline-form input{flex:1;min-width:0;height:34px;padding:0 10px;border:1px solid #e3e6ec;border-radius:8px;font-size:13px}
+.report-table td.good{color:#12a06a;font-weight:700}.report-table td.bad{color:#e5484d;font-weight:700}
+.business-input{height:29px;width:150px;border:1px solid #d9dde5;border-radius:3px;padding:0 8px;font-size:12px}
+/* 방문 장소 */
+.place-info{display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px;font-size:12px;color:#4b5563;margin-top:6px}
+.place-info svg{color:#6935f5;flex-shrink:0}
+.place-info b{font-weight:700;color:#1f2330}
+.place-info em{font-style:normal;font-size:10px;font-weight:700;padding:2px 6px;border-radius:999px;background:#fff4e0;color:#b45309}
+.place-info span{color:#6b7280}
+.place-info a{margin-left:auto;font-weight:700;color:#6935f5;font-size:12px}
+.place-pick{display:grid;gap:8px}
+.place-pick label{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid #e6e8ee;border-radius:8px;cursor:pointer;font-size:13px}
+.place-pick label:has(input:checked){border-color:#6935f5;background:#f7f4ff}
+.place-pick label small{display:block;font-size:11px;color:#8a8f99;margin-top:2px}
+.place-pick input{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important}
+.place-pick label:has(input:focus-visible){outline:2px solid #6935f5;outline-offset:2px}
+.detail-place{margin:-6px 0 18px;padding:10px 14px;border-radius:10px;background:#fff}.detail-place .place-info{margin-top:0}
+.plan-blocker{margin-top:16px;padding:10px 12px;border-radius:3px;background:#fff7e8;color:#8a5a12;font-size:12px;line-height:1.6}
+/* 알림(새 메시지·새 요청 등) 숫자는 헤더 알림과 같은 빨간색 */
+.sg .sg-qicon em,.sg .sg-badge.alert{background:#ff4d4f!important;color:#fff!important;font-weight:700!important}
+.sg .sg-badge.alert{border-radius:999px!important;min-width:18px;padding:1px 6px!important;text-align:center}

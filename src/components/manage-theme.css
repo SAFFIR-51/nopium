@@ -1,0 +1,168 @@
+/*
+ * "내 관리" 공통 테마 (보호자·선생님·병원·운영)
+ * 위계: 흰 상단 띠(제목·프로필·탭) → 회색 바탕 위 대표 카드(히어로) → 색 아이콘 지표 → 흰 카드 목록.
+ * 색은 상태 의미로만 씁니다: 보라=브랜드·주요 행동, 초록=진행·확정, 주황=대기·확인 필요, 빨강=누락·반려.
+ */
+.manage{
+  --m-bg:#f4f5f8; --m-card:#fff; --m-line:#eceef3; --m-ink:#1f2330; --m-sub:#6b7280; --m-faint:#9aa1ad;
+  --m-brand:#6935f5; --m-brand-soft:#f1ecff; --m-brand-ink:#4b22c9;
+  --m-green:#12a06a; --m-green-soft:#e6f7ef; --m-amber:#d97706; --m-amber-soft:#fff4e0;
+  --m-red:#e5484d; --m-red-soft:#fdecec; --m-blue:#2f6fe4; --m-blue-soft:#e8f0ff; --m-teal:#0e9aa7; --m-teal-soft:#e2f6f7;
+  --m-shadow:0 1px 2px rgba(20,24,40,.03);
+  --m-bg:#f7f8fa;background:var(--m-bg)!important;color:var(--m-ink)
+}
+
+/* 상단 흰 띠: 화면 너비 전체로 칠합니다(가로 스크롤 없이) */
+.manage{overflow-x:clip}
+.manage .manage-band,.manage .my-band{position:relative;z-index:5;margin-bottom:28px}
+.manage .manage-band:before,.manage .my-band:before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:-100vmax;right:-100vmax;background:#fff;border-bottom:1px solid #eceef3}
+
+/* 업무 역할 래퍼: 바탕은 화면 전체, 내용은 970px */
+.workspace.role-tabs.manage{width:100%;padding:0 max(20px,calc((100% - 970px)/2))}
+.workspace.role-tabs.manage>.workspace-content{padding-top:0}
+.manage .work-head{display:flex;align-items:center;gap:14px;justify-content:flex-start;padding:30px 0 6px;margin:0}
+.manage .work-avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:var(--m-brand);background:var(--m-brand-soft);flex-shrink:0}
+.manage.role-hospital .work-avatar,.manage.role-admin .work-avatar{color:#4b5563;background:#f0f1f4}
+.manage .work-title{font-size:13px;font-weight:600;color:var(--m-faint);letter-spacing:0}
+.manage .work-person{margin-top:2px;font-size:22px;font-weight:750;letter-spacing:-.03em;color:var(--m-ink);gap:8px}
+.manage .work-person small{font-size:14px;font-weight:500;color:var(--m-sub)}
+.manage .work-role{font-style:normal;font-size:11px;font-weight:700;padding:4px 8px;border-radius:999px;background:var(--m-brand-soft);color:var(--m-brand)}
+.manage .manage-band .work-tabs{display:flex;gap:28px;margin:18px 0 0;border:0;overflow-x:auto;scrollbar-width:none}
+.manage .manage-band .work-tabs a{position:relative;display:inline-flex;align-items:center;gap:6px;padding:12px 0 14px;font-size:15px;font-weight:500;color:var(--m-sub);white-space:nowrap;background:none;border:0;border-radius:0}
+.manage .manage-band .work-tabs a svg{display:none}
+.manage .manage-band .work-tabs a:hover{color:var(--m-ink);background:none}
+.manage .manage-band .work-tabs a.active{color:var(--m-ink);font-weight:750;background:none}
+.manage .manage-band .work-tabs a.active:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--m-brand);z-index:1}
+.manage .manage-band .work-tabs .side-count{position:static;margin-left:2px;min-width:18px;height:18px;font-size:10px;background:var(--m-red)}
+
+/* 제목 */
+.manage .dashboard-title{margin-bottom:20px}
+.manage .dashboard-title h1{font-size:21px!important;font-weight:750;letter-spacing:-.03em;color:var(--m-ink)}
+.manage .dashboard-title p:not(.eyebrow){font-size:13px;color:var(--m-sub)}
+
+/* 카드 */
+.manage .care-panel,.manage .my-card{background:var(--m-card);border:1px solid var(--m-line);border-radius:18px;box-shadow:var(--m-shadow);padding:24px 26px}
+.manage .panel-heading{margin-bottom:18px}
+.manage .panel-heading h2,.manage .my-card-head h2{font-size:17px;font-weight:750;letter-spacing:-.025em;color:var(--m-ink)}
+.manage .muted.small,.manage .my-muted-inline{color:var(--m-faint)}
+
+/* 지표: 색 아이콘 + 큰 숫자 */
+.manage .dashboard-metrics{gap:14px;margin-bottom:22px;border:0}
+.manage .metric-card{display:block;border:1px solid var(--m-line)!important;border-radius:18px;background:#fff;box-shadow:var(--m-shadow);padding:18px 20px!important;color:inherit;transition:transform .15s,box-shadow .15s}
+.manage .metric-card:after,.manage .metric-card:before{display:none}
+.manage .metric-card>div{display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--m-sub)}
+.manage .metric-card .metric-icon{display:grid!important;place-items:center;width:34px;height:34px;border-radius:11px;order:-1}
+.manage .metric-card>b{font-size:30px;font-weight:750;letter-spacing:-.03em;margin:12px 0 2px;color:var(--m-ink);line-height:1.2}
+.manage .metric-card>p{font-size:12px;color:var(--m-faint)}
+.manage .metric-card.is-link:hover{border-color:#d9dce3!important}
+.manage .metric-icon,.manage .tile-icon{background:#f2f3f6;color:#4b5563}
+.manage .tone-red .metric-icon,.manage .tile-icon.tone-red{background:var(--m-red-soft);color:var(--m-red)}
+
+/* 상태 배지 */
+.manage .care-badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--m-brand-soft);color:var(--m-brand)}
+.manage .care-badge.green{background:var(--m-green-soft);color:var(--m-green)}
+.manage .care-badge.amber{background:var(--m-amber-soft);color:var(--m-amber)}
+.manage .care-badge.red{background:var(--m-red-soft);color:var(--m-red)}
+.manage .care-badge.grey{background:#f0f1f4;color:#7a828f}
+
+/* 버튼 */
+.manage .btn-primary{background:var(--m-brand);border-color:var(--m-brand);box-shadow:none}
+.manage .btn-primary:hover{background:var(--m-brand-ink)}
+.manage .btn-ghost{background:#fff;border:1px solid #e3e6ec;color:var(--m-ink)}
+
+/* 목록 행 */
+.manage .history-list>div{border-top-color:var(--m-line);padding:14px 0}
+.manage .request-item{border-top-color:var(--m-line)}
+.manage .request-item .eyebrow{display:inline-flex;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--m-amber-soft);color:var(--m-amber)}
+.manage .care-empty{color:var(--m-faint)}
+.manage .care-empty>svg{color:#c7cbe0}
+
+/* ── 대표 카드: 흰 카드 + 보라 포인트만 ── */
+.m-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding:24px 26px;margin-bottom:12px;border-radius:18px;background:#fff;border:1px solid var(--m-line);color:var(--m-ink)}
+.m-hero-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--m-sub)}
+.m-hero-label em{font-style:normal;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--m-brand-soft);color:var(--m-brand)}
+.m-hero-title{font-size:26px;font-weight:800;letter-spacing:-.035em;margin:8px 0 4px;line-height:1.3}
+.m-hero-title small{font-size:17px;font-weight:600;margin-left:8px;color:var(--m-sub)}
+.m-hero-meta{font-size:14px;color:var(--m-sub)}
+.m-hero-note{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 10px;border-radius:8px;background:#f6f7f9;color:var(--m-sub);font-size:12px;font-weight:500}
+.m-hero-note button{color:var(--m-brand);font-size:12px;font-weight:600;margin-left:4px}
+.m-hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.m-hero-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:10px;font-size:14px;font-weight:600;color:var(--m-ink);background:#fff;border:1px solid #e3e6ec;cursor:pointer}
+.m-hero-btn:hover{background:#f7f8fa}
+.m-hero-btn.solid{background:var(--m-brand);color:#fff;border-color:var(--m-brand)}
+.m-hero-btn.solid:hover{background:var(--m-brand-ink)}
+.m-hero-btn em{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#fff;color:var(--m-brand);font-size:11px;font-weight:800;display:inline-grid;place-items:center}
+.m-hero-btn:not(.solid) em{background:var(--m-red);color:#fff}
+.m-hero-side{display:grid;gap:12px;justify-items:center;min-width:180px;padding:16px 18px;border-radius:14px;background:#f7f8fa;text-align:center}
+.m-hero-person{display:flex;align-items:center;gap:10px;text-align:left}
+.m-hero-person img,.m-hero-person .m-hero-initial{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.m-hero-initial{display:grid;place-items:center;background:var(--m-brand-soft);color:var(--m-brand);font-weight:700}
+.m-hero-person b{display:block;font-size:14px}
+.m-hero-person small{display:block;font-size:12px;color:var(--m-faint);margin-top:2px}
+.m-ring{--p:0;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--m-brand) calc(var(--p)*1%),#e6e8ee 0)}
+.m-ring>span{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;align-content:center;background:#f7f8fa}
+.m-ring b{font-size:20px;font-weight:800;line-height:1}
+.m-ring small{font-size:11px;color:var(--m-faint);margin-top:3px}
+.m-hero-side>p{font-size:12px;color:var(--m-sub)}
+.m-hero.calm{background:#fff}
+
+/* 요약 타일(히어로 아래) */
+.m-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.m-tile{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#fff;border:1px solid var(--m-line);color:inherit;min-width:0}
+a.m-tile:hover{border-color:#d9dce3}
+.tile-icon{flex-shrink:0;width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.m-tile small{display:block;font-size:12px;color:var(--m-sub);font-weight:600}
+.m-tile b{display:block;font-size:20px;font-weight:800;letter-spacing:-.03em;margin-top:2px;white-space:nowrap}
+.m-tile b span{font-size:12px;font-weight:600;color:var(--m-faint);margin-left:3px}
+.m-tile b i{font-style:normal;font-size:12px;font-weight:700;margin-left:6px;color:var(--m-green)}
+.m-tile b i.bad{color:var(--m-red)}
+.m-tile.alert b{color:var(--m-red)}
+
+/* 처리할 일(경고형) */
+.manage .report-missing{border-left:3px solid var(--m-amber)}
+.manage .report-missing .panel-heading h2:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--m-amber);margin-right:8px;vertical-align:middle}
+
+@media(max-width:820px){
+  .m-hero{grid-template-columns:1fr;padding:24px 22px}
+  .m-hero-side{grid-auto-flow:column;justify-content:space-between;align-items:center;min-width:0;text-align:left}
+  .m-ring{width:72px;height:72px}.m-ring>span{width:58px;height:58px}.m-ring b{font-size:17px}
+  .m-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+  .workspace.role-tabs.manage{padding:0 16px}
+  .manage .work-head{padding-top:22px}
+  .manage .work-avatar{width:44px;height:44px;border-radius:14px}
+  .manage .work-person{font-size:19px}
+  .manage .manage-band .work-tabs{gap:20px}
+  .manage .manage-band .work-tabs a{font-size:14px}
+  .manage .care-panel,.manage .my-card{padding:20px;border-radius:16px}
+  .manage .metric-card{padding:14px}
+  .manage .metric-card>b{font-size:24px}
+  .m-hero-title{font-size:25px}.m-hero-title small{font-size:15px}
+  .m-hero-btn{height:40px;padding:0 13px;font-size:13px}
+  .m-hero-side{grid-auto-flow:row;justify-items:start}
+  .m-hero-side>.m-ring{display:none}
+  .m-tile{padding:14px}.tile-icon{width:34px;height:34px}.m-tile b{font-size:17px}
+}
+
+/* 히어로 옆 숫자 묶음(선생님·운영) */
+.m-hero-stats{grid-auto-flow:column;gap:0;padding:16px 6px}
+.m-hero-stats>div{padding:0 18px;border-left:1px solid #e6e8ee;text-align:center}
+.m-hero-stats>div:first-child{border-left:0}
+.m-hero-stats small{display:block;font-size:12px;color:var(--m-faint);white-space:nowrap}
+.m-hero-stats b{display:block;font-size:26px;font-weight:800;margin-top:4px}
+.m-hero-stats b span{font-size:12px;font-weight:600;margin-left:2px;color:var(--m-faint)}
+@media(max-width:640px){.m-hero-side.m-hero-stats{grid-auto-flow:column;justify-items:center;padding:12px 0}.m-hero-stats>div{padding:0 10px}.m-hero-stats b{font-size:21px}}
+.manage .workspace-content,.workspace.role-tabs.manage>.workspace-content{background:transparent!important}
+/* 예전 초록 계열 잔여 색을 테마로 맞춤 */
+.manage .care-table th{background:#f6f7fa;color:var(--m-faint)}
+.manage .care-table td{color:var(--m-sub);border-bottom-color:var(--m-line)}
+.manage .care-table b{color:var(--m-ink)}
+.manage .text-button,.manage .role-link{color:var(--m-brand)}
+.manage .progress-track span,.manage .small-track span{background:var(--m-brand)}
+.manage .patient-initial{background:var(--m-brand-soft);color:var(--m-brand);font-weight:700}
+.manage .detail-facts>div{border:0;border-radius:14px;box-shadow:var(--m-shadow)}
+.manage .care-tabs button.active{color:var(--m-ink)}
+.manage .care-tabs button.active:after{background:var(--m-brand)}
+.manage .schedule-day{color:var(--m-brand)}
+.manage .notice-line{background:#f6f7fa;color:var(--m-sub)}

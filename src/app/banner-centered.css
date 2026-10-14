@@ -1,0 +1,69 @@
+.brand-masthead { padding-bottom: 16px; }
+.brand-masthead .masthead-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100%;
+}
+.brand-masthead .masthead-photo {
+  position: relative;
+  display: block;
+  flex: 0 0 112px;
+  width: 112px;
+  height: 88px;
+  inset: auto;
+  align-self: flex-end;
+  border-radius: 0;
+  opacity: 1;
+}
+.masthead-photo img { object-fit: cover; object-position: center top; }
+
+@media(max-width:700px) {
+  .brand-masthead { padding: 0 16px 16px; }
+  .brand-masthead .masthead-message {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 76px minmax(0,1.3fr);
+    gap: 7px;
+    width: 100%;
+    max-width: 390px;
+    margin: 0 auto;
+  }
+  .brand-masthead .masthead-message>span:first-child,
+  .brand-masthead .masthead-message>strong {
+    font-size: clamp(18px,5.1vw,22px);
+    line-height: 1.3;
+    white-space: normal;
+    letter-spacing: -.04em;
+  }
+  .brand-masthead .masthead-message>span:first-child { text-align: right; }
+  .brand-masthead .masthead-photo {
+    width: 76px;
+    height: 88px;
+    inset: auto;
+    align-self: end;
+  }
+}
+
+/* 모바일 배너: 글자를 키우고 왼쪽 두 줄, 사진은 오른쪽 아래 */
+@media(max-width:700px) {
+  .brand-masthead { height: 136px; padding: 0 20px 16px; }
+  .brand-masthead .masthead-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    width: 100%;
+    max-width: 440px;
+    padding-right: 100px;
+  }
+  .brand-masthead .masthead-message>span:first-child,
+  .brand-masthead .masthead-message>strong {
+    font-size: clamp(24px,7.2vw,30px);
+    line-height: 1.25;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .brand-masthead .masthead-photo { position: absolute; right: 0; bottom: 0; width: 92px; height: 104px; }
+}

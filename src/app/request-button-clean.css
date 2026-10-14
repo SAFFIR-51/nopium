@@ -1,0 +1,30 @@
+.quick-request {
+  background: #f8f7fb;
+  border: 1px solid #ece8f3;
+  box-shadow: none;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+.quick-request:hover {
+  background: #f1ecfb;
+  border-color: #c8b5ef;
+}
+
+.quick-request:active { background: #ebe3f9; }
+.quick-request:focus-visible { outline: 2px solid #a887e7; outline-offset: 3px; }
+.quick-request::before, .quick-request::after { content: none; }
+
+.quick-request .request-sparkles {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: none;
+}
+
+.quick-request .request-sparkle-main { fill: #7845ed; }
+.quick-request .request-sparkle-small { fill: #b59af0; }
+.quick-request .request-sparkle-small.second { display: none; }
+
+@media(max-width:700px) { .quick-request .request-sparkles { width: 18px; height: 18px; } }
+@media(prefers-reduced-motion:reduce) { .quick-request { transition: none; } }

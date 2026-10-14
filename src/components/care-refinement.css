@@ -1,0 +1,75 @@
+/* Identity is text first; purple is reserved for actions and active states. */
+.manage .sg-profile{padding:22px 24px;border:1px solid #e9ebf0;border-radius:12px;margin-bottom:16px;gap:20px}
+.manage .sg-profile b{font-size:20px;line-height:1.4;font-weight:700;letter-spacing:-.04em}
+.manage .sg-profile small{font-size:13px;color:#727783;margin-top:5px}
+.manage .sg-profile .sg-btn{font-size:12px;font-weight:600}
+.manage .my-picker-btn{padding:18px 22px;gap:18px;border:1px solid #e9ebf0!important;min-height:82px}
+.manage .my-picker-label{font-size:12px;color:#727783;white-space:nowrap}
+.manage .my-picker-text b{font-size:16px;font-weight:650;line-height:1.5}
+.manage .my-picker-text small{margin-top:3px;color:#727783;line-height:1.5}
+.manage .care-status{font-size:11px;font-weight:600;padding:5px 9px;background:#f1ecff;color:#6433d7;border-radius:5px;white-space:nowrap}
+.manage .my-picker-menu button{padding:12px 14px}
+.manage .sg-feature{margin-top:20px;padding:24px;border:1px solid #e9ebf0}
+.manage .sg-feature .sg-big{font-size:22px;font-weight:700;margin:7px 0;line-height:1.4}
+.manage .sg-feature .sg-row small{color:#727783;line-height:1.6}
+.manage .sg-quick-menu{padding:18px 8px;margin-top:12px;border:1px solid #e9ebf0}
+.manage .sg-title{font-weight:650;font-size:16px;line-height:1.5}
+.manage .sg-list b{font-weight:600;line-height:1.55}
+.manage .sg-list small{line-height:1.65;color:#727783}
+.manage .sg-list>a,.manage .sg-list>button{padding:18px 0}
+.manage .patient-head{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;padding:24px 0;margin-bottom:18px;border-bottom:1px solid #e4e7ec}
+.manage .patient-head>div:first-child{flex:1;min-width:240px}
+.manage .patient-head h1{font-size:25px;font-weight:700;line-height:1.5;letter-spacing:-.04em}
+.manage .patient-head p{font-size:13px;line-height:1.7;color:#727783;margin-top:6px}
+.manage .patient-head>div:last-child{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.manage .admin-overview .sg-head{align-items:flex-start;gap:18px;margin-bottom:24px}
+.manage .admin-overview .sg-head h1{font-size:23px;font-weight:700;line-height:1.4}
+.manage .admin-overview .sg-head-link{font-size:11px;color:#7d8490;white-space:nowrap;margin-top:7px}
+.manage .admin-work-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #e5e7ed;border-radius:12px;background:#fff;padding:20px 0}
+.manage .admin-work-summary>a{padding:0 20px;border-left:1px solid #eceef2;display:grid;gap:8px}
+.manage .admin-work-summary>a:first-child{border-left:0}
+.manage .admin-work-summary small{font-size:12px;color:#727783;line-height:1.5}
+.manage .admin-work-summary b{font-size:26px;font-weight:700;line-height:1.2}
+.manage .admin-work-summary b span{font-size:12px;font-weight:500;color:#727783;margin-left:5px}
+.manage .admin-work-summary>a:first-child b{color:#6935f5}
+.manage .admin-work-summary>a:hover small{color:#6935f5}
+.manage .admin-overview .sg-title{scroll-margin-top:100px}
+.manage .admin-overview .sg-card{border:1px solid #e9ebf0;padding:20px}
+.manage .admin-overview .sg-state{display:inline-block;width:fit-content;padding:3px 7px;border-radius:4px;background:#f5f6f8;margin-bottom:6px}
+.manage .admin-overview .sg-state.on{background:#f1ecff}
+.manage .admin-overview .sg-state.warn{background:#fff4e5}
+.manage .admin-overview .sg-row small{line-height:1.6}
+.manage a:focus-visible,.manage button:focus-visible{outline:2px solid #6935f5;outline-offset:4px}
+@media(max-width:640px){
+ .manage .sg-profile{padding:20px 18px;flex-wrap:wrap;gap:12px}
+ .manage .sg-profile b{font-size:18px}
+ .manage .my-picker-btn{padding:16px;gap:12px;flex-wrap:wrap}
+ .manage .my-picker-label{font-size:11px}
+ .manage .my-picker-text b{font-size:15px}
+ .manage .sg-feature{padding:20px 18px}
+ .manage .sg-feature .sg-big{font-size:20px}
+ .manage .patient-head h1{font-size:22px}
+ .manage .patient-head>div:last-child{justify-content:flex-start;width:100%}
+ .manage .admin-overview .sg-head{flex-wrap:wrap;gap:6px}
+ .manage .admin-overview .sg-head h1{font-size:21px}
+ .manage .admin-work-summary>a{padding:0 12px}
+ .manage .admin-work-summary small{font-size:11px}
+ .manage .admin-work-summary b{font-size:23px}
+}
+
+/* Compact account and patient identity rows. Wrap only when space runs out. */
+.manage .sg-profile>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px}
+.manage .sg-profile small{margin:0;font-size:13px;line-height:1.6}
+.manage .my-picker-text{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 10px}
+.manage .my-picker-text small{margin:0;white-space:normal;line-height:1.6}
+.manage .my-picker-btn{min-height:64px;padding:16px 20px}
+.manage .my-picker-menu .my-picker-text{display:grid;gap:3px}
+@media(max-width:640px){
+ .manage .sg-profile{padding:18px}
+ .manage .sg-profile>div{gap:4px 10px}
+ .manage .sg-profile small{font-size:12px}
+ .manage .my-picker-btn{padding:15px 16px;gap:10px}
+ .manage .my-picker-label{display:none}
+ .manage .my-picker-text{gap:3px 8px}
+ .manage .my-picker-text small{font-size:12px}
+}

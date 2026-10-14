@@ -1,0 +1,65 @@
+/* 회차 보고서 작성 */
+.srf{display:grid;gap:16px}
+.srf-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.srf-row>label{flex:0 0 auto}
+.srf-seg,.srf-chips,.srf-measures{border:0;padding:0;margin:0;min-width:0}
+.srf-seg legend,.srf-chips legend,.srf-measures legend{font-size:13px;font-weight:600;color:#4e5b6b;margin-bottom:8px;padding:0}
+.srf-measures legend small{font-weight:400;color:#8a929e;margin-left:6px}
+.srf-seg{display:flex;gap:6px;flex-wrap:wrap}
+.srf-seg legend{width:100%}
+.srf-seg label{display:inline-flex!important;align-items:center;gap:6px;padding:9px 14px;border:1px solid #e1e5eb;border-radius:8px;font-size:13px;cursor:pointer}
+.srf-seg label.on{border-color:#6935f5;background:#f6f3ff;color:#5a3fc0;font-weight:600}
+.srf-seg input{position:absolute;opacity:0;pointer-events:none}
+.srf-seg label:has(input:focus-visible){outline:2px solid #6935f5;outline-offset:2px}
+.srf-chips{display:flex;flex-wrap:wrap;gap:6px}
+.srf-chips legend{width:100%}
+.srf-chips button{height:32px;padding:0 12px;border:1px solid #e1e5eb;border-radius:999px;background:#fff;font-size:13px;cursor:pointer}
+.srf-chips button.on{border-color:#6935f5;background:#6935f5;color:#fff}
+.srf-unit{display:inline-flex;align-items:center;gap:6px}
+.srf-unit input{width:96px!important}
+.srf-unit em{font-style:normal;font-size:12px;color:#8a929e;min-width:22px}
+.srf-measures table{width:100%;border-collapse:collapse;font-size:13px}
+.srf-measures th{text-align:left;font-size:11px;font-weight:500;color:#8a929e;padding:6px 8px;background:#f6f7f9}
+.srf-measures td{padding:8px;border-bottom:1px solid #f0f1f4;vertical-align:middle}
+.srf-measures td b{display:block;font-size:13px}
+.srf-measures td small{display:block;font-size:11px;color:#9aa1ad;margin-top:2px}
+.srf-measures td input{width:100%}
+.srf-prev{color:#8a929e;white-space:nowrap}
+.srf-opt{font-weight:400;color:#9aa1ad;font-size:12px}
+.srf-errors{margin:0;padding:10px 14px 10px 28px;border-radius:8px;background:#fdf1f0;color:#b4492c;font-size:13px;line-height:1.7}
+@media(max-width:640px){.srf-measures thead{display:none}.srf-measures tr{display:grid;grid-template-columns:1fr auto;gap:4px 8px;padding:10px 0;border-bottom:1px solid #f0f1f4}.srf-measures td{border:0;padding:0}.srf-measures td:nth-child(3){display:none}.srf-measures td:nth-child(4){grid-column:1/-1}}
+
+/* 회차 보고서 읽기 */
+.src{padding:18px 20px;border:1px solid #ececf0;border-radius:12px;background:#fff}
+.src+.src{margin-top:12px}
+.src-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.src-head b{font-size:16px;margin-right:8px}
+.src-head span{font-size:13px;color:#8a8f99}
+.src-tags{display:flex;gap:6px;flex-wrap:wrap}
+.src-tags em{font-style:normal;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:#f2f3f5;color:#555b66}
+.src-att.ok{background:#e9f7ef!important;color:#2f8a57!important}
+.src-att.part{background:#fff4e5!important;color:#b07a2a!important}
+.src-att.no{background:#fdecec!important;color:#c2413b!important}
+.src-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.src-acts span{font-size:12px;padding:3px 9px;border-radius:999px;background:#f4f0ff;color:#5a3fc0}
+.src-content{font-size:14px;line-height:1.7;margin-top:10px;color:#323232}
+.src-measures{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.src-measures th{width:44%;text-align:left;font-weight:500;color:#6f7480;padding:7px 0;border-top:1px solid #f2f2f4}
+.src-measures td{padding:7px 0;border-top:1px solid #f2f2f4}
+.src-measures td b{font-size:14px}
+.src-measures td small{margin-left:6px;font-size:12px;color:#9aa1ad}
+.src-muted{font-size:12px;color:#a3a7b0;margin-top:6px}
+.src-adverse{display:flex;gap:8px;align-items:flex-start;margin-top:12px;padding:10px 12px;border-radius:8px;background:#fff6f2;color:#9b4a2c;font-size:13px;line-height:1.7}
+.src-adverse svg{flex-shrink:0;margin-top:3px}
+.src-line{display:flex;gap:10px;margin-top:10px;font-size:13px;line-height:1.6;color:#323232}
+.src-line b{flex-shrink:0;width:72px;color:#8a8f99;font-weight:500}
+.srf-correct-note{display:flex;gap:6px;align-items:flex-start;font-size:12px;line-height:1.7;color:#9b5c2e;background:#fdf4ea;padding:10px 12px;border-radius:8px;margin-bottom:14px}
+.srf-correct-note svg{flex-shrink:0;margin-top:3px}
+.src-revised{display:flex;gap:6px;align-items:flex-start;font-size:12px;color:#7a828f;background:#f6f7f9;border-radius:8px;padding:8px 10px;margin-top:10px;line-height:1.6}
+.src-revised b{color:#4b5563;font-weight:700}
+.revision-list .rev-changes{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.revision-list .rev-changes span{font-size:11px;padding:3px 7px;border-radius:5px;background:#fff4e0;color:#b45309}
+.srf-chips button.off-scope{border-style:dashed;color:#9aa1ad}
+.srf-chips button.off-scope.on{background:#fdecec;border-color:#e5484d;color:#b42318}
+.srf-chips button small{font-size:10px}
+.srf-scope{font-size:12px;color:#6b7280;margin-top:-4px}

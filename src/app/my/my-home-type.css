@@ -1,0 +1,79 @@
+/* Four type levels: page 22, next visit 18, content 14, supporting text 12. */
+:is(.my-page.role-patient,.my-page.role-provider) .my-home{--my-ink:#292e38;--my-muted:#777e8a;--my-body:14px;--my-caption:12px;color:var(--my-ink);font-size:var(--my-body);line-height:1.6;letter-spacing:-.015em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-h1{font-size:22px;font-weight:700;line-height:1.4;letter-spacing:-.03em;margin-bottom:24px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-profile{padding:18px 20px;gap:12px;margin-bottom:12px;border-radius:10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-profile b,:is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-text b{font-size:var(--my-body);font-weight:600;line-height:1.6;letter-spacing:-.015em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-profile small,:is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-text small,:is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-label{font-size:var(--my-caption);font-weight:400;color:var(--my-muted);line-height:1.6;margin:0}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-profile>div,:is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-text{align-items:baseline;gap:4px 10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-btn{padding:16px 20px;min-height:58px;border-radius:10px;gap:12px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .care-status,:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-badge{font-size:var(--my-caption);font-weight:400;line-height:1.5;background:#f2f3f6;color:#6e7582;border-radius:4px;padding:3px 7px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-card{padding:20px;border-radius:10px;margin-bottom:12px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-feature{margin-top:16px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-row b{font-size:var(--my-body);font-weight:600;line-height:1.6;letter-spacing:-.015em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-feature .sg-big{font-size:18px;font-weight:600;line-height:1.5;margin:6px 0;letter-spacing:-.025em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-row small,:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-row small.sg-state{font-size:var(--my-caption);font-weight:400;color:var(--my-muted);line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-state.on{color:var(--my-muted)!important}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-right{font-size:var(--my-caption);font-weight:400;color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-progress{height:4px;margin:16px 0 10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-progress-label{font-size:var(--my-caption);line-height:1.6;color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-progress-label b{font-size:var(--my-caption);font-weight:600;color:var(--my-ink)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-title{font-size:var(--my-body);font-weight:600;line-height:1.6;letter-spacing:-.015em;margin:28px 0 10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-quick-menu{padding:16px 8px;margin-top:16px;border-radius:10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-quick-menu a{font-size:var(--my-body);font-weight:400;gap:7px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-qicon{width:36px;height:36px;border-radius:10px;background:#f5f6f8;color:#6b7280}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-qicon em{font-size:10px;font-weight:600;background:#727985}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list{padding:0 20px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list>a,:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list>button{padding:16px 0}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list b{font-size:var(--my-body);font-weight:400;line-height:1.6;letter-spacing:-.015em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list small{font-size:var(--my-caption);font-weight:400;line-height:1.6;color:var(--my-muted);margin-top:3px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-measures{font-size:var(--my-body);font-weight:400;color:var(--my-muted);line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-measures b{font-size:inherit;font-weight:600;color:var(--my-ink)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-highlight,:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-foot{font-size:var(--my-caption);font-weight:400;color:var(--my-muted);line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-notice{background:#f0ebfb;border-radius:10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-notice-row{font-size:var(--my-body);font-weight:400}
+:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-notice-row a{font-size:var(--my-caption);font-weight:600}
+@media(max-width:640px){
+ :is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-profile,:is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-card{padding:18px}
+ :is(.my-page.role-patient,.my-page.role-provider) .my-home .my-picker-btn{padding:15px 18px}
+ :is(.my-page.role-patient,.my-page.role-provider) .my-home .sg-list{padding:0 18px}
+}
+
+/* Schedule and confirmed session reports share the home type scale. */
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .my-subheader{align-items:center;margin-bottom:24px;gap:10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .my-subheader h1{font-size:22px;font-weight:700;line-height:1.4;letter-spacing:-.03em}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .my-subheader p{font-size:12px;font-weight:400;line-height:1.6;color:var(--my-muted);margin-top:4px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .my-back{width:28px;height:28px;margin:0}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-big{font-size:18px;font-weight:600;line-height:1.5;margin:6px 0}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-title span{font-size:12px;font-weight:400;color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-person{font-size:14px;font-weight:400;line-height:1.6;color:var(--my-ink)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-chat{background:#fff;color:var(--my-ink);border:1px solid #e3e6ec;border-radius:6px;font-size:12px;font-weight:400;gap:5px;height:32px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-actions button{font-size:14px;font-weight:400;border-radius:6px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-change{font-size:12px;font-weight:400;line-height:1.6;gap:8px;border-radius:6px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-change button,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-change a{font-size:12px;font-weight:600}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-check{font-size:14px;font-weight:400;line-height:1.6;color:var(--my-ink);gap:10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-check svg{color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-more.inline{font-size:12px;font-weight:400;border-radius:6px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-list .sg-row b{font-weight:400}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-list .sg-row>span:first-child{display:grid;gap:3px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-report{scroll-margin-top:100px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-head{gap:12px;align-items:baseline}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-head>div:first-child{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-head b{font-size:14px;font-weight:600;line-height:1.6;margin:0}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-head span{font-size:12px;font-weight:400;color:var(--my-muted);line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-tags em{font-size:12px;font-weight:400;border-radius:4px;padding:2px 6px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-acts span{font-size:12px;font-weight:400;border-radius:4px;background:#f2f3f6;color:#727783;padding:3px 7px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-content{font-size:14px;font-weight:400;line-height:1.7;color:var(--my-ink);margin-top:16px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-measures{font-size:14px;line-height:1.6;margin-top:16px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-measures th{font-size:12px;font-weight:400;color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-measures td b{font-size:14px;font-weight:600}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-measures td small{font-size:12px;color:var(--my-muted);line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-line{font-size:14px;font-weight:400;line-height:1.7;margin-top:12px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-line b{font-size:12px;font-weight:400;color:var(--my-muted);width:76px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-muted,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-revised{font-size:12px;font-weight:400;line-height:1.6;color:var(--my-muted)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-adverse{font-size:14px;line-height:1.7}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-summary b{font-size:18px;font-weight:600;line-height:1.5;color:var(--my-ink)}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-summary span,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-summary small,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-tabs button{font-size:12px;font-weight:400;line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-tabs button{border-radius:6px}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-note,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-label,:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .mt-val{font-size:12px;font-weight:400;line-height:1.6}
+:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .sg-highlight.top{font-size:14px;font-weight:400;color:var(--my-ink)}
+@media(max-width:640px){:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-head{flex-wrap:wrap}:is(.my-page.role-patient,.my-page.role-provider) .my-sub-view .src-line{flex-wrap:wrap;gap:4px 10px}}
