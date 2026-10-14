@@ -12,8 +12,28 @@ import "./ui-refinement.css";
 import "./card-name-location.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nopium.vercel.app"),
   title: "NOPIUM | 퇴원 후에도 이어지는 재활",
   description: "병원에서 퇴원한 뒤에도 집이나 가까운 센터에서 재활 전문가와 재활을 이어가세요. 신청부터 일정, 프로그램 기록과 보고까지 한곳에서 확인하세요.",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "NOPIUM",
+    title: "NOPIUM | 퇴원 후에도, 일상을 잇는 운동",
+    description: "집에서, 가까운 센터에서. 나에게 맞는 재활 프로그램을 만나보세요.",
+    images: [{
+      url: "/images/nopium-social-v2.jpg",
+      width: 1200,
+      height: 630,
+      alt: "NOPIUM — 퇴원 후에도 일상을 잇는 운동",
+    }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NOPIUM | 퇴원 후에도, 일상을 잇는 운동",
+    description: "집에서, 가까운 센터에서. 나에게 맞는 재활 프로그램을 만나보세요.",
+    images: ["/images/nopium-social-v2.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
