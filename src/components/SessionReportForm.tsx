@@ -1,11 +1,15 @@
 "use client";
+import { mutationFailed } from "@/lib/repo";
 import { useState } from "react";
-import { Badge, Modal, savedTimeLabel } from "@/components/CareUI";
+import { Badge, PagePanel, savedTimeLabel } from "@/components/CareUI";
 import { Icon } from "@/components/Icon";
 import { ACTIVITIES, ATTENDANCE, SESSION_MEASURES as MEASURES, measureValue } from "@/lib/measures";
-import { scheduleProblem } from "@/lib/program";
+import { scheduleProblem, SERVICE_VISIT } from "@/lib/program";
+import { prescriptionForDate } from "@/lib/workflow";
 import { PlacePicker } from "./PlacePicker";
 import { upcomingPlace, type Place } from "@/lib/places";
+import { contraWarnings } from "@/lib/protocols";
+import { ContraBox } from "./ContraBox";
 import { careRepo, todayLocal, useCare, type CareRecord, type Patient, type ProviderRef } from "@/lib/repo";
 import "./session-report.css";
 
@@ -24,6 +28,9 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
   const [recordId, setRecordId] = useState<string | undefined>(draft?.id);
   const [savedAt, setSavedAt] = useState<string | undefined>(draft?.updatedAt);
   const [date, setDate] = useState(draft?.date ?? defaultDate ?? todayLocal());
+  const visitVersion = prescriptionForDate(state, patient, date);
+  const visitRx = visitVersion?.prescription ?? patient.prescription;
+  const needsAcknowledgment = !correcting && visitVersion && author && !state.prescriptionAcknowledgments.some(a => a.versionId === visitVersion.id && a.providerId === author.id);
   const [attendance, setAttendance] = useState<NonNullable<CareRecord["attendance"]>>(draft?.attendance ?? "참여");
   const [absenceReason, setAbsenceReason] = useState(draft?.absenceReason ?? "");
   const [duration, setDuration] = useState(draft?.durationMin ? String(draft.durationMin) : "60");
@@ -39,14 +46,18 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
   const [nextDate, setNextDate] = useState("");
   const [nextTime, setNextTime] = useState(patient.nextTime);
   const [checked, setChecked] = useState(false);
+  const [contraChecked, setContraChecked] = useState(draft?.contraChecked ?? false);
   const [reason, setReason] = useState("");
   const [tried, setTried] = useState(false);
   const [shortReason, setShortReason] = useState("");
   const [place, setPlace] = useState<Place>(draft?.place ?? upcomingPlace(patient));
 
   const absent = attendance === "미참여";
-  const scope = patient.prescription?.scope;
+  const scope = visitRx?.scope;
   const outOfScope = scope ? activities.filter(a => !scope.includes(a)) : [];
+  // 병원이 정한 금기 운동: 관련 활동을 고르면 경고하고, 지켰는지 확인을 받습니다.
+  const hasContra = (visitRx?.contraindications?.length ?? 0) > 0;
+  const warnings = absent ? [] : contraWarnings(visitRx, activities);
   const durationNum = Number(duration) || 0;
   const badValue = MEASURES.some(m => { const v = values[m.code]; if (v === "") return false; const n = Number(v); return !Number.isFinite(n) || n < 0 || (m.max !== undefined && n > m.max); });
   const errors = [
@@ -59,9 +70,11 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
     !correcting && nextDate && nextDate <= date && "다음 일정은 진행일 이후여야 해요.",
     correcting && !reason.trim() && "정정 사유를 적어 주세요.",
     !absent && outOfScope.length > 0 && `처방 범위 밖 활동이에요: ${outOfScope.join(", ")} (담당 의사에게 범위 변경을 요청해 주세요)`,
-    !correcting && !absent && durationNum > 0 && durationNum < 60 && !shortReason.trim() && "60분보다 짧으면 사유를 적어 주세요.",
-    patient.prescription && date < patient.prescription.startDate && `처방 시작일(${patient.prescription.startDate.slice(5).replace("-", ".")}) 전에는 방문할 수 없어요.`,
+    !correcting && !absent && durationNum > 0 && durationNum < SERVICE_VISIT.minMinutes && !shortReason.trim() && "50분보다 짧으면 사유를 적어 주세요.",
+    visitRx && date < visitRx.startDate && `처방 시작일(${visitRx.startDate}) 전에는 방문할 수 없어요.`,
+    needsAcknowledgment && "해당 회차에 적용할 병원 승인 내용을 먼저 확인해 주세요.",
     !correcting && nextDate && scheduleProblem(patient, state.records, nextDate, date),
+    !absent && hasContra && !contraChecked && "병원이 정한 금기 운동을 하지 않았는지 확인해 주세요.",
     !checked && "주의사항과 수행 반응 확인에 체크해 주세요.",
   ].filter(Boolean) as string[];
 
@@ -69,31 +82,34 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
     id: recordId, date, attendance, place, absenceReason: absent ? absenceReason.trim() : undefined,
     durationMin: absent ? 0 : Number(duration) || undefined,
     activities: absent ? [] : activities,
-    content: absent ? `미참여 · ${absenceReason.trim()}` : `${content.trim()}${shortReason.trim() && durationNum < 60 ? `\n(짧게 진행한 사유: ${shortReason.trim()})` : ""}`,
+    content: absent ? `미참여 · ${absenceReason.trim()}` : `${content.trim()}${shortReason.trim() && durationNum < SERVICE_VISIT.minMinutes ? `\n(짧게 진행한 사유: ${shortReason.trim()})` : ""}`,
     measures: absent ? [] : MEASURES.map(m => ({ code: m.code, value: values[m.code] === "" ? null : Number(values[m.code]), note: notes[m.code].trim() || undefined })),
     adverse: { occurred: adverse, detail: adverse ? adverseDetail.trim() : undefined, action: adverse ? adverseAction.trim() : undefined },
     education: education.trim() || undefined,
+    contraChecked: !absent && hasContra ? contraChecked : undefined,
     next: next.trim(), walk: "", pain: "", nextDate, nextTime,
   });
-  const save = (confirm: boolean) => {
+  const save = async (confirm: boolean) => {
     if (confirm && errors.length) { setTried(true); return; }
     if (correcting) {
       if (!author) return;
       const { id: _id, nextDate: _d, nextTime: _t, ...fields } = input();
       void _id; void _d; void _t;
-      careRepo.correctRecord(correcting.id, fields, reason.trim(), author);
+      if (mutationFailed(await careRepo.correctRecord(correcting.id, fields, reason.trim(), author))) return;
       onClose();
       return;
     }
-    const id = careRepo.saveRecord(patient.id, input(), { confirm, author });
+    const id = await careRepo.saveRecord(patient.id, input(), { confirm, author });
+    if (!id) return;
     setRecordId(id); setSavedAt(new Date().toISOString());
     if (confirm) onClose();
   };
   const toggle = (a: string) => setActivities(list => list.includes(a) ? list.filter(x => x !== a) : [...list, a]);
 
-  return <Modal title={`${patient.name} 님 ${draft?.sessionNo ?? patient.completed + 1}회차 보고서${correcting ? " 정정" : ""}`} onClose={onClose} wide>
+  return <PagePanel title={`${patient.name} 님 ${draft?.sessionNo ?? patient.completed + 1}회차 보고서${correcting ? " 정정" : ""}`} onClose={onClose} wide>
     {correcting && <p className="srf-correct-note"><Icon name="shield" size={15} />확정된 보고서는 덮어쓰지 않아요. 바뀐 항목과 정정 사유·작성자·시각이 이력으로 남고, 보호자·기관 화면에 &quot;정정됨&quot;으로 표시돼요.</p>}
     <div className="record-context"><Badge>{patient.status}</Badge><b>{patient.condition}</b><p><Icon name="shield" size={16} />{patient.precautions}</p></div>
+    {visitVersion && <section className="admin-notice"><b>이번 회차 적용: 병원 승인 v{visitVersion.version} · {visitVersion.effectiveFrom}부터</b><p>{visitRx?.doctorOpinion}<br />금기: {visitRx?.contraindications?.join(" · ") || "등록 없음"}<br />주의사항: {visitRx?.cautions?.join(" · ") || "등록 없음"}</p>{needsAcknowledgment && author && <button type="button" className="business-action primary" onClick={async () => await careRepo.acknowledgePrescription(patient.id, visitVersion.id, author)}>해당 승인 내용 확인</button>}</section>}
     <form className="care-form srf" onSubmit={e => { e.preventDefault(); save(true); }}>
       <div className="srf-row">
         <label>진행일<input type="date" value={date} max={todayLocal()} onChange={e => setDate(e.target.value)} /></label>
@@ -101,10 +117,11 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
         {!absent && <label>진행 시간<span className="srf-unit"><input type="number" min="0" max="240" value={duration} onChange={e => setDuration(e.target.value)} /><em>분</em></span></label>}
       </div>
       <div><p className="srf-scope" style={{ margin: "0 0 8px" }}>진행 장소</p><PlacePicker patient={patient} value={place} onChange={setPlace} allowed={patient.prescription?.places} name={`srf-place-${patient.id}`} /></div>
-      {!absent && !correcting && durationNum > 0 && durationNum < 60 && <label>60분보다 짧은 사유<input value={shortReason} onChange={e => setShortReason(e.target.value)} placeholder="예: 피로감으로 보호자와 상의해 조기 종료" /></label>}
+      {!absent && !correcting && durationNum > 0 && durationNum < SERVICE_VISIT.minMinutes && <label>50분보다 짧은 사유<input value={shortReason} onChange={e => setShortReason(e.target.value)} placeholder="실제 진행 시간과 사유" /></label>}
       {absent ? <label>미참여 사유<input value={absenceReason} onChange={e => setAbsenceReason(e.target.value)} placeholder="예: 컨디션 저하로 보호자 요청에 따라 쉼" /></label> : <>
         <fieldset className="srf-chips"><legend>진행한 활동</legend>{ACTIVITIES.map(a => { const off = !!scope && !scope.includes(a); return <button type="button" key={a} aria-pressed={activities.includes(a)} className={`${activities.includes(a) ? "on" : ""} ${off ? "off-scope" : ""}`} title={off ? "처방 범위 밖" : undefined} onClick={() => toggle(a)}>{a}{off && <small> · 범위 밖</small>}</button>; })}</fieldset>
         {scope && <p className="srf-scope">처방 범위: {scope.join(" · ")} · {patient.doctor ?? patient.prescription?.doctor}</p>}
+        {warnings.map(w => <p key={w.text} className="contra-warn" role="alert"><b>{w.activities.join("·")}</b> 활동에서 금기: {w.text}</p>)}
         <label>진행 내용과 수행 반응<textarea rows={3} value={content} onChange={e => setContent(e.target.value)} placeholder="실제 진행한 활동과 대상자의 반응을 적어 주세요." /></label>
         <fieldset className="srf-measures"><legend>측정값 <small>측정하지 않은 항목은 비워 두세요 (미측정은 0과 구분돼요)</small></legend>
           <table><thead><tr><th>항목</th><th>값</th><th>지난 회차</th><th>메모</th></tr></thead><tbody>
@@ -123,10 +140,11 @@ export function SessionReportForm({ patient, onClose, author, defaultDate, corre
       <label>다음 계획<textarea rows={2} value={next} onChange={e => setNext(e.target.value)} placeholder="다음 회차에서 확인할 내용" /></label>
       {!correcting && <div className="form-two"><label>다음 일정<input type="date" value={nextDate} min={date} onChange={e => setNextDate(e.target.value)} /></label><label>시간<select value={nextTime} onChange={e => setNextTime(e.target.value)}>{["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"].map(t => <option key={t}>{t}</option>)}</select></label></div>}
       {correcting && <label>정정 사유<input value={reason} onChange={e => setReason(e.target.value)} placeholder="예: 보행 거리 측정값 입력 오류" /></label>}
+      {!absent && hasContra && <><ContraBox rx={visitRx} /><label className="consent-check"><input type="checkbox" checked={contraChecked} onChange={e => setContraChecked(e.target.checked)} /><span>병원이 정한 금기 운동을 하지 않았습니다.</span></label></>}
       <label className="consent-check"><input type="checkbox" checked={checked} onChange={e => setChecked(e.target.checked)} /><span>대상자의 주의사항과 수행 반응을 확인했습니다.</span></label>
       {tried && errors.length > 0 && <ul className="srf-errors" role="alert">{errors.map(e => <li key={e}>{e}</li>)}</ul>}
       {correcting ? <div className="modal-actions"><span className="muted">정정 이력 {correcting.revisions?.length ?? 0}건</span><div><button className="btn-ghost" type="button" onClick={onClose}>취소</button><button className="btn-primary" type="submit">정정 저장</button></div></div>
         : <div className="modal-actions"><span className="muted">{savedAt ? `임시 저장됨 · 마지막 저장 ${savedTimeLabel(savedAt)}` : "확정하면 보호자 화면과 월간 보고서에 반영돼요."}</span><div><button className="btn-ghost" type="button" onClick={() => save(false)}>임시 저장</button><button className="btn-primary" type="submit">보고서 확정</button></div></div>}
     </form>
-  </Modal>;
+  </PagePanel>;
 }

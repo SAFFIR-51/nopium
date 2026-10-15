@@ -1,5 +1,5 @@
 import type { CareState, Patient } from "@/lib/repo";
-import { DEMO_ACCOUNTS, type Role } from "@/lib/session";
+import { DEMO_ACCOUNTS, DEMO_MODE, type Role } from "@/lib/session";
 
 /**
  * 역할별 열람 범위 (기획서 5장).
@@ -10,6 +10,7 @@ import { DEMO_ACCOUNTS, type Role } from "@/lib/session";
  * - 운영자: 운영 정보 전체
  */
 export function visiblePatients(state: CareState, role: Role | null): Patient[] {
+  if (!DEMO_MODE) return role && role !== "guest" ? state.patients : [];
   switch (role) {
     case "patient":
       return state.patients.filter(p => p.guardianAccountId === DEMO_ACCOUNTS.patient.id);

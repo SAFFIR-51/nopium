@@ -7,8 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/Icon";
 import { experts } from "@/lib/data";
 import { addPatient } from "@/lib/care-store";
-import { setDemoRole, useRole } from "@/lib/demo-session";
-import { DEMO_ACCOUNTS, DEMO_MODE } from "@/lib/session";
+import { setDemoRole, useRole, useActor } from "@/lib/demo-session";
+import { DEMO_MODE } from "@/lib/session";
 import "./request-flow.css";
 import "./request-chat.css";
 
@@ -32,7 +32,7 @@ function today(){const now=new Date();return `${now.getFullYear()}-${String(now.
 
 export default function RequestFlow({expertId}:{expertId?:string}){
  const expert=experts.find(e=>e.id===expertId);
- const role=useRole();
+ const role=useRole(); const actor=useActor();
  const [step,setStep]=useState(0),[condition,setCondition]=useState(""),[forWho,setForWho]=useState(""),[name,setName]=useState(""),[age,setAge]=useState(""),[method,setMethod]=useState(""),[area,setArea]=useState(""),[date,setDate]=useState(""),[time,setTime]=useState(""),[dateError,setDateError]=useState(""),[memo,setMemo]=useState(""),[consent,setConsent]=useState(false),[done,setDone]=useState(false),[editing,setEditing]=useState(false);
  const titleRef=useRef<HTMLHeadingElement>(null),dateRef=useRef<HTMLInputElement>(null),submitted=useRef(false);
  useEffect(()=>{if(step>0)titleRef.current?.focus({preventScroll:true});if(step===5)dateRef.current?.setAttribute("min",today());},[step]);
@@ -40,8 +40,9 @@ export default function RequestFlow({expertId}:{expertId?:string}){
  const percent=done?100:Math.round(step/titles.length*100);
  const move=(next:number)=>{setStep(next);window.scrollTo({top:0,behavior:"instant"});};
  const edit=(next:number)=>{setEditing(true);move(next);};
- const submit=()=>{if(!valid.every(Boolean)||submitted.current)return;if(date<today()){setDateError("오늘 이후의 날짜를 선택해 주세요.");move(5);return;}submitted.current=true;addPatient({id:`p-${crypto.randomUUID()}`,name:name.trim(),age:Number(age),sex:"미입력",condition,area,hospital:role==="hospital"?DEMO_ACCOUNTS.hospital.organization:forWho==="기관에서 연계"?"기관 연계 신청":"직접 이용 신청",provider:"",status:"배정 대기",goal:memo.trim()||"퇴원 후 일상 활동을 이어가고 싶어요",precautions:"초기 평가와 주의사항 확인 필요",completed:0,total:12,nextDate:date,nextTime:time,method,consent,requestedProviderId:expert?.id,requestedProviderName:expert?.name,applicant:forWho,guardianAccountId:role==="hospital"||role==="admin"?undefined:DEMO_ACCOUNTS.patient.id});if(DEMO_MODE&&(role===null||role==="guest"))setDemoRole("patient");setDone(true);window.scrollTo({top:0,behavior:"instant"});};
+ const submit=async()=>{if(!valid.every(Boolean)||submitted.current)return;if(date<today()){setDateError("오늘 이후의 날짜를 선택해 주세요.");move(5);return;}submitted.current=true;const result=await addPatient({id:`p-${crypto.randomUUID()}`,name:name.trim(),age:Number(age),sex:"미입력",condition,area,hospital:role==="hospital"?actor.organization:forWho==="기관에서 연계"?"기관 연계 신청":"직접 이용 신청",provider:"",status:"배정 대기",goal:memo.trim()||"퇴원 후 일상 활동을 이어가고 싶어요",precautions:"초기 평가와 주의사항 확인 필요",completed:0,total:12,nextDate:date,nextTime:time,method,consent,requestedProviderId:expert?.id,requestedProviderName:expert?.name,applicant:forWho,guardianAccountId:role==="hospital"||role==="admin"?undefined:actor.id});if ((result as unknown) === false) {submitted.current=false;return;}if(DEMO_MODE&&(role===null||role==="guest"))setDemoRole("patient");setDone(true);window.scrollTo({top:0,behavior:"instant"});};
  const summary=[{label:"관리 목적",value:condition,step:0},{label:"신청 구분",value:forWho,step:1},{label:"이용자",value:`${name} · ${age}세`,step:2},{label:"진행 방식",value:method,step:3},{label:"희망 지역",value:area,step:4},{label:"희망 일정",value:`${date} ${time}`,step:5},{label:"함께 확인할 내용",value:memo.trim()||"입력한 내용 없음",step:6}];
+ if(!DEMO_MODE&&(!role||role==="guest"))return <section className="wrap care-panel"><h1>재활 프로그램 신청</h1><p>계정으로 로그인한 뒤 신청해 주세요.</p><Link href="/login" className="btn-primary">로그인</Link></section>;
  return <div className="request-flow request-chat"><div className="request-progress-header"><div className="request-flow-width"><div className="request-progress-title"><h1>재활 프로그램 신청</h1><Link href="/">나가기 <Icon name="close" size={15}/></Link></div><div className="request-progress-line"><div role="progressbar" aria-label="신청 진행률" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}><span style={{width:`${percent}%`}}/></div><b>{percent}%</b></div></div></div>
  <div className="request-flow-body"><div className="request-flow-width">
  {done?<section className="request-question request-done"><span className="request-done-icon"><Icon name="check" size={30}/></span><h2>신청이 저장됐어요</h2><p>{name} 님의 희망 조건이 저장되었습니다.<br/>내 관리에서 배정 대기 상태를 확인할 수 있어요.</p><dl>{expert&&<div><dt>희망 전문가</dt><dd>{expert.name}</dd></div>}<div><dt>현재 상태</dt><dd>배정 대기</dd></div><div><dt>진행 방식</dt><dd>{method} · {area}</dd></div><div><dt>희망 일정</dt><dd>{date} {time}</dd></div></dl><Link className="request-primary" href={role==="hospital"?"/hospital":role==="admin"?"/admin":"/my"}>{role==="hospital"?"연계 대상 확인":role==="admin"?"운영 현황 확인":"내 관리 확인"} <Icon name="arrow" size={18}/></Link><a className="request-home-link" href="/request">새 신청 시작하기</a><Link className="request-home-link" href="/">홈으로 돌아가기</Link><small>체험용 신청이며 실제 기관이나 전문가에게 전송되지 않습니다.</small></section>:<>

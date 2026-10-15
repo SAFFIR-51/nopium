@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Modal } from "@/components/CareUI";
+import { mutationFailed } from "@/lib/repo";
+import { usePatientAccount } from "@/lib/demo-session";
 import { Icon } from "@/components/Icon";
 import { careRepo } from "@/lib/repo";
-import { DEMO_ACCOUNTS } from "@/lib/session";
 import { MySubHeader } from "../PatientShell";
 import { usePatientCare } from "../use-patient-care";
 
@@ -18,8 +19,9 @@ const scopes = ["일정", "회차 기록·평가", "월간 보고서", "담당 �
 export function Sharing() {
   const { patients } = usePatientCare();
   const [confirmOff, setConfirmOff] = useState<string | null>(null);
-  const me = DEMO_ACCOUNTS.patient;
+  const me = usePatientAccount();
   const target = patients.find(p => p.id === confirmOff);
+
   return <div className="sg sg-sub-page">
     <MySubHeader title="정보 공유·보호자 연결" subtitle="누가 어떤 정보를 볼 수 있는지 확인하고, 기관 공유 동의를 관리해요." />
     {patients.map(p => {
@@ -34,14 +36,16 @@ export function Sharing() {
         </dl>
         <div className="my-share-row">
           <div><b>{linked ? `${p.hospital}에 진행 보고서 공유` : "연계 기관 공유"}</b><small>{linked ? "확정된 월간 보고서만 공유돼요. 끄면 앞으로 공유되는 보고서를 기관이 볼 수 없어요." : "직접 신청한 프로그램이라 공유할 연계 기관이 없어요."}</small></div>
-          <button role="switch" aria-checked={p.consent} disabled={!linked} className={`my-switch ${p.consent ? "on" : ""}`} onClick={() => p.consent ? setConfirmOff(p.id) : careRepo.changePatient(p.id, { consent: true })}><span /></button>
+          <button role="switch" aria-checked={p.consent} disabled={!linked} className={`my-switch ${p.consent ? "on" : ""}`} onClick={async () => p.consent ? setConfirmOff(p.id) : await careRepo.changePatient(p.id, { consent: true })}><span /></button>
         </div>
       </section>;
     })}
     <p className="my-caption"><Icon name="shield" size={12} /> 보호자 연결 해제·범위 변경은 대상자 본인 확인 후 처리돼요. (체험 화면에서는 준비 중)</p>
+
+
     {target && <Modal title="기관 공유를 끌까요?" onClose={() => setConfirmOff(null)}>
       <p className="modal-lead">{target.hospital}에서 {target.name} 님의 보고서를 더 이상 볼 수 없게 돼요. 이미 기관이 내려받은 파일은 이 설정으로 회수되지 않아요.</p>
-      <div className="modal-actions"><span /><div><button className="btn-ghost" onClick={() => setConfirmOff(null)}>취소</button><button className="btn-primary" onClick={() => { careRepo.changePatient(target.id, { consent: false }); setConfirmOff(null); }}>공유 끄기</button></div></div>
+      <div className="modal-actions"><span /><div><button className="btn-ghost" onClick={() => setConfirmOff(null)}>취소</button><button className="btn-primary" onClick={async () => { if (mutationFailed(await careRepo.changePatient(target.id, { consent: false }))) return; setConfirmOff(null); }}>공유 끄기</button></div></div>
     </Modal>}
-  </div>;;
+</div>;;
 }

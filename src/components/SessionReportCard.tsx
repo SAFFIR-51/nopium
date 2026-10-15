@@ -1,7 +1,7 @@
 "use client";
 import { Icon } from "@/components/Icon";
 import { measureDef, recordMeasures } from "@/lib/measures";
-import type { CareRecord } from "@/lib/repo";
+import { useCare, type CareRecord } from "@/lib/repo";
 import { placeName } from "@/lib/places";
 import "./session-report.css";
 
@@ -9,6 +9,7 @@ const md = (iso: string) => `${Number(iso.slice(5, 7))}.${Number(iso.slice(8, 10
 
 /** 회차 보고서 읽기 화면 (보호자·선생님·기관 공통). */
 export function SessionReportCard({ record, provider }: { record: CareRecord; provider?: string }) {
+  const version = useCare().prescriptionVersions.find(v => v.id === record.prescriptionVersionId);
   const measures = recordMeasures(record);
   const measured = measures.filter(m => m.value !== null);
   const unmeasured = measures.filter(m => m.value === null).map(m => measureDef(m.code)?.label ?? m.code);
@@ -18,6 +19,7 @@ export function SessionReportCard({ record, provider }: { record: CareRecord; pr
       <div className="src-tags">{record.attendance && <em className={`src-att ${record.attendance === "참여" ? "ok" : record.attendance === "미참여" ? "no" : "part"}`}>{record.attendance}</em>}{!!record.durationMin && <em>{record.durationMin}분</em>}{record.place && <em>{placeName(record.place)}</em>}{record.revisions?.length ? <em>정정 {record.revisions.length}회</em> : null}</div>
     </header>
     {record.activities?.length ? <p className="src-acts">{record.activities.map(a => <span key={a}>{a}</span>)}</p> : null}
+    {version && <p className="src-muted">적용 처방 v{version.version} · {version.effectiveFrom}부터 · 승인 {version.by}</p>}
     <p className="src-content">{record.content}</p>
     {measured.length > 0 && <table className="src-measures"><tbody>{measured.map(m => { const d = measureDef(m.code); return <tr key={m.code}><th>{d?.label ?? m.code}</th><td><b>{m.value}{d?.unit}</b>{m.note && <small>{m.note}</small>}</td></tr>; })}</tbody></table>}
     {unmeasured.length > 0 && record.attendance !== "미참여" && <p className="src-muted">미측정: {unmeasured.join(", ")}</p>}

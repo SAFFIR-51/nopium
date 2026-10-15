@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
-import { ReportView } from "@/components/CareUI";
+import { usePageFlag } from "@/lib/page-view";
+import { SatisfactionForm } from "@/components/SatisfactionForm";
+import { ReportView } from "@/components/reports/ReportView";
 import { Icon } from "@/components/Icon";
 import { MeasureTrend } from "@/components/MeasureTrend";
 import { SessionReportCard } from "@/components/SessionReportCard";
@@ -12,11 +13,12 @@ import "../my-home-type.css";
 /** 회차 보고서: 변화 요약 → 월간 보고서 → 회차별 보고서. 선생님이 확정한 보고서만 보입니다. */
 export function MyRecords() {
   const { state, patient } = usePatientCare();
-  const [report, setReport] = useState(false);
+  const [report, setReport] = usePageFlag("report", patient?.id);
   if (!patient) return <div className="sg my-home my-sub-view"><MySubHeader title="회차 보고서" subtitle="연결된 관리 대상이 없어요." /></div>;
   const records = state.records.filter(r => r.patientId === patient.id && r.confirmed).sort((a, b) => b.date.localeCompare(a.date));
   const shared = state.reports.find(r => r.patientId === patient.id)?.shared;
   const highlight = measureHighlight(records);
+  if (report) return <ReportView patient={patient} readOnly audience="guardian" onClose={() => setReport(false)} />;
   return <div className="sg my-home my-sub-view">
     <MySubHeader title="회차 보고서" subtitle="매 회차 선생님이 작성한 보고서예요" />
     <PatientSwitch />
@@ -30,6 +32,7 @@ export function MyRecords() {
       <h2 className="sg-title">회차별 보고서 <span>{records.length}</span></h2>
       {records.map(r => <section className="sg-card sg-report" id={r.id} key={r.id}><SessionReportCard record={r} provider={patient.provider} /></section>)}
     </> : <section className="sg-card sg-empty">회차가 진행되면 선생님이 남긴 보고서가 이곳에 쌓여요.</section>}
-    {report && <ReportView patient={patient} readOnly onClose={() => setReport(false)} />}
+    <SatisfactionForm patient={patient} />
+
   </div>;
 }

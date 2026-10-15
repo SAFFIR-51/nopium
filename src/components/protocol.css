@@ -1,0 +1,20 @@
+/* 진료과 프로토콜 · 금기 운동 (병원 처방 창, 치료사 화면, 회차 보고서) */
+.protocol-select optgroup{font-weight:600}
+.protocol-note{margin:4px 0 0;font-size:12px;line-height:1.6;color:#6b7280}
+.protocol-note b{color:#374151;font-weight:600}
+.protocol-note .missing{color:#b45309}
+.srf-chips.contra-chips button.on{border-color:#e5484d;background:#fdecec;color:#b42318}
+.contra-add{display:flex;gap:6px;width:100%;margin-top:4px}
+.contra-add input{flex:1;min-width:0}
+.contra-add button{height:36px;padding:0 12px;border:1px solid #e1e5eb;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;white-space:nowrap}
+.contra-add button:disabled{color:#b0b6c0;cursor:default}
+
+.contra-box{margin:10px 0 0;padding:12px 14px;border:1px solid #f5c2c0;border-radius:12px;background:#fff8f7}
+.contra-box h4{display:flex;align-items:center;gap:6px;margin:0 0 6px;font-size:13px;font-weight:600;color:#b42318}
+.contra-box ul{margin:0;padding-left:18px;font-size:12px;line-height:1.7;color:#4b5563}
+.contra-box .contra-cautions{margin-top:8px;padding-top:8px;border-top:1px dashed #f5c2c0}
+.contra-box .contra-cautions h4{color:#8a5a12}
+.contra-box .contra-meta{margin:8px 0 0;font-size:11px;color:#9aa1ad}
+
+.contra-warn{margin:6px 0 0;padding:8px 10px;border-radius:8px;background:#fdecec;color:#b42318;font-size:12px;line-height:1.6}
+.contra-warn b{font-weight:600}

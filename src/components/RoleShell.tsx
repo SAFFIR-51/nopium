@@ -40,7 +40,7 @@ function ActiveRoleNav(props: { menu: RoleMenuItem[]; root: string }) {
 function RoleGate({ area, current }: { area: WorkRole; current: Role }) {
   const label = ROLE_INFO[area].label;
   if (!DEMO_MODE) {
-    return <section className="care-panel care-empty role-gate"><Icon name="shield" size={32} /><h3>{label} 계정으로 로그인해 주세요</h3><p>이 화면은 {label}만 이용할 수 있어요.</p></section>;
+    return <section className="care-panel care-empty role-gate"><Icon name="shield" size={32} /><h3>{label} 계정으로 로그인해 주세요</h3><p>이 화면은 {label}만 이용할 수 있어요.</p><Link className="btn-primary" href="/login">로그인</Link></section>;
   }
   return <section className="care-panel care-empty role-gate">
     <Icon name="shield" size={32} />

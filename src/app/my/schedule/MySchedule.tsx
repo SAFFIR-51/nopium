@@ -1,12 +1,13 @@
 "use client";
+import { Modal } from "@/components/CareUI";
+import { mutationFailed } from "@/lib/repo";
+import { usePatientAccount } from "@/lib/demo-session";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Modal } from "@/components/CareUI";
 import { Icon } from "@/components/Icon";
 import { expertPortraits } from "@/lib/expert-portraits";
 import { careRepo } from "@/lib/repo";
-import { DEMO_ACCOUNTS } from "@/lib/session";
 import { useToday } from "@/lib/use-today";
 import { absenceReasons, visitPrep } from "../care-content";
 import { dday, md, weekday } from "../my-utils";
@@ -21,13 +22,14 @@ import { placeName, samePlace, upcomingPlace, type Place } from "@/lib/places";
 export function MySchedule() {
   const { state, patient } = usePatientCare();
   const today = useToday();
-  const me = DEMO_ACCOUNTS.patient;
+  const me = usePatientAccount();
   const [modal, setModal] = useState<"change" | "absent" | "prep" | null>(null);
-  const [place, setPlace] = useState<Place>({ kind: "자택" });
+  const [place, setPlace] = useState<Place | null>(null);
   const [date, setDate] = useState(""); const [time, setTime] = useState(""); const [reason, setReason] = useState(absenceReasons[0]); const [memo, setMemo] = useState("");
-  if (!patient) return <div className="sg my-home my-sub-view"><MySubHeader title="일정" subtitle="연결된 관리 대상이 없어요." /></div>;
 
-  const started = patient.status === "진행 중" || patient.status === "종료";
+
+if (!patient) return <div className="sg my-home my-sub-view"><MySubHeader title="일정" subtitle="연결된 관리 대상이 없어요." /></div>;
+    const started = patient.status === "진행 중" || patient.status === "종료";
   const records = state.records.filter(r => r.patientId === patient.id && r.confirmed).sort((a, b) => b.date.localeCompare(a.date));
   const request = state.scheduleRequests.find(r => r.patientId === patient.id);
   const pending = request?.status === "요청" ? request : undefined;
@@ -36,21 +38,25 @@ export function MySchedule() {
   const chatHref = (t?: string) => `/chat?c=${thread}${t ? `&t=${encodeURIComponent(t)}` : ""}`;
   const nextLabel = request?.status === "확정" && request.respondedAt ? (request.kind === "변경" ? "변경 확정" : "확인됨") : "방문 예정";
 
-  const submit = () => {
+  const submit = async () => {
     const current = `${md(patient.nextDate)}(${weekday(patient.nextDate)}) ${patient.nextTime}`;
     if (modal === "change") {
-      if (!date || !time) return;
-      const placeChanged = !samePlace(place, upcomingPlace(patient));
-      careRepo.requestSchedule({ patientId: patient.id, kind: "변경", date, time, reason: memo.trim() || (placeChanged ? "장소 변경" : "희망 일정 변경"), by: me.name, ...(placeChanged ? { place } : {}) });
+      const requestedDate = date || patient.nextDate, requestedTime = time || patient.nextTime;
+      if (!requestedDate || !requestedTime) return;
+      const placeChanged = !samePlace(place ?? upcomingPlace(patient), upcomingPlace(patient));
+      if (mutationFailed(await careRepo.requestSchedule({ patientId: patient.id, kind: "변경", date: requestedDate, time: requestedTime, reason: memo.trim() || (placeChanged ? "장소 변경" : "희망 일정 변경"), by: me.name, ...(placeChanged ? { place: place ?? upcomingPlace(patient) } : {}) }))) return;
       // 담당 선생님 대화방에도 남겨 바로 알 수 있게 합니다. (알림에는 건강 정보를 넣지 않습니다)
-      if (patient.providerId) careRepo.sendMessage(thread, { key: me.id, name: me.name }, `[일정 변경 요청] ${current} → ${md(date)}(${weekday(date)}) ${time}${placeChanged ? `\n장소: ${placeName(upcomingPlace(patient))} → ${placeName(place)} (이번 회차만)` : ""}${memo.trim() ? `\n사유: ${memo.trim()}` : ""}`);
+      if (patient.providerId) if (mutationFailed(await careRepo.sendMessage(thread, { key: me.id, name: me.name }, `[일정 변경 요청] ${current} → ${md(requestedDate)}(${weekday(requestedDate)}) ${requestedTime}${placeChanged ? `\n장소: ${placeName(upcomingPlace(patient))} → ${placeName(place ?? upcomingPlace(patient))} (이번 회차만)` : ""}${memo.trim() ? `\n사유: ${memo.trim()}` : ""}`))) return;
     } else {
       const why = reason === "기타" ? memo.trim() || "기타" : reason;
-      careRepo.requestSchedule({ patientId: patient.id, kind: "참여 어려움", reason: why, by: me.name });
-      if (patient.providerId) careRepo.sendMessage(thread, { key: me.id, name: me.name }, `[참여 어려움] ${current} 일정에 참여하기 어려워요.\n사유: ${why}`);
+      if (mutationFailed(await careRepo.requestSchedule({ patientId: patient.id, kind: "참여 어려움", reason: why, by: me.name }))) return;
+      if (patient.providerId) if (mutationFailed(await careRepo.sendMessage(thread, { key: me.id, name: me.name }, `[참여 어려움] ${current} 일정에 참여하기 어려워요.\n사유: ${why}`))) return;
     }
     setModal(null); setMemo("");
   };
+
+
+
 
   return <div className="sg my-home my-sub-view">
     <MySubHeader title="일정" />
@@ -62,7 +68,7 @@ export function MySchedule() {
         <span><small className="sg-state on">{nextLabel} · {dday(today, patient.nextDate)}</small><b className="sg-big">{md(patient.nextDate)} ({weekday(patient.nextDate)}) {patient.nextTime}</b></span>
       </div>
       <PlaceInfo patient={patient} changed={!!patient.nextPlace} />
-      {pending && <p className="sg-change"><Icon name="clock" size={14} />{pending.kind === "변경" ? <>{md(pending.date!)} ({weekday(pending.date!)}) {pending.time}{pending.place ? ` · ${placeName(pending.place)}` : ""}로 변경 요청 · 선생님 확인 중</> : "참여 어려움 알림 · 선생님 확인 중"}<button onClick={() => careRepo.cancelScheduleRequest(pending.id)}>요청 취소</button></p>}
+      {pending && <p className="sg-change"><Icon name="clock" size={14} />{pending.kind === "변경" ? <>{md(pending.date!)} ({weekday(pending.date!)}) {pending.time}{pending.place ? ` · ${placeName(pending.place)}` : ""}로 변경 요청 · 선생님 확인 중</> : "참여 어려움 알림 · 선생님 확인 중"}<button onClick={async () => await careRepo.cancelScheduleRequest(pending.id)}>요청 취소</button></p>}
       {request?.status === "조정 필요" && <p className="sg-change warn"><Icon name="chat" size={14} />{request.response || "일정 조정이 필요해요."}<Link href={chatHref("다른 가능한 시간을 알려주세요.")}>채팅으로 정하기</Link></p>}
       {request?.status === "확정" && request.response && <p className="sg-change"><Icon name="check" size={14} />{request.response}</p>}
       <div className="sg-divider" />
@@ -80,8 +86,16 @@ export function MySchedule() {
       <span className="sg-right">보고서<Icon name="chevron" size={14} /></span>
     </Link>)}</section> : <section className="sg-card sg-empty">아직 진행한 회차가 없어요.</section>}
 
+
+
+
+
+
+
     {modal === "prep" && <Modal title="방문 전에 준비해 주세요" onClose={() => setModal(null)}><p className="modal-lead">{md(patient.nextDate)}({weekday(patient.nextDate)}) {patient.nextTime} · {patient.provider} 선생님 {patient.method}</p><ul className="my-prep">{visitPrep.map(v => <li key={v}><Icon name="check" size={15} />{v}</li>)}</ul><p className="form-hint">주의사항: {patient.precautions}</p></Modal>}
-    {modal === "change" && <Modal title="일정·장소 변경 요청" onClose={() => setModal(null)}><p className="modal-lead">희망 일정을 보내면 담당 선생님이 확인한 뒤 확정돼요. 확정 전까지는 기존 일정이 유지돼요.</p><form className="care-form" onSubmit={e => { e.preventDefault(); submit(); }}><label>희망 날짜<input type="date" required min={today ?? undefined} value={date} onChange={e => setDate(e.target.value)} /></label><label>희망 시간<select value={time} onChange={e => setTime(e.target.value)}>{["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map(t => <option key={t}>{t}</option>)}</select></label><div><p className="srf-scope" style={{ margin: "0 0 8px" }}>장소 {patient.prescription?.places?.length === 1 ? "(처방상 한 곳만 가능해요)" : "(이번 회차만 바뀌어요)"}</p><PlacePicker patient={patient} value={place} onChange={setPlace} allowed={patient.prescription?.places} name="change-place" /></div><label>변경 사유 (선택)<input value={memo} onChange={e => setMemo(e.target.value)} placeholder="예: 병원 진료와 겹쳐요" /></label><button className="btn-primary wide">변경 요청 보내기</button></form></Modal>}
+
+    {modal === "change" && <Modal title="일정·장소 변경 요청" onClose={() => setModal(null)}><p className="modal-lead">희망 일정을 보내면 담당 선생님이 확인한 뒤 확정돼요. 확정 전까지는 기존 일정이 유지돼요.</p><form className="care-form" onSubmit={e => { e.preventDefault(); submit(); }}><label>희망 날짜<input type="date" required min={today ?? undefined} value={date || patient.nextDate} onChange={e => setDate(e.target.value)} /></label><label>희망 시간<select value={time || patient.nextTime} onChange={e => setTime(e.target.value)}>{["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map(t => <option key={t}>{t}</option>)}</select></label><div><p className="srf-scope" style={{ margin: "0 0 8px" }}>장소 {patient.prescription?.places?.length === 1 ? "(처방상 한 곳만 가능해요)" : "(이번 회차만 바뀌어요)"}</p><PlacePicker patient={patient} value={place ?? upcomingPlace(patient)} onChange={setPlace} allowed={patient.prescription?.places} name="change-place" /></div><label>변경 사유 (선택)<input value={memo} onChange={e => setMemo(e.target.value)} placeholder="예: 병원 진료와 겹쳐요" /></label><button className="btn-primary wide">변경 요청 보내기</button></form></Modal>}
+
     {modal === "absent" && <Modal title="참여 어려움 알리기" onClose={() => setModal(null)}><p className="modal-lead">{md(patient.nextDate)} {patient.nextTime} 일정에 참여하기 어렵다면 사유를 알려 주세요. 담당 선생님이 다음 일정을 함께 정해요.</p><form className="care-form" onSubmit={e => { e.preventDefault(); submit(); }}><fieldset className="decline-reasons"><legend className="sr">사유</legend>{absenceReasons.map(r => <label key={r}><input type="radio" name="absent" checked={reason === r} onChange={() => setReason(r)} />{r}</label>)}</fieldset>{reason === "기타" && <label>사유<input required value={memo} onChange={e => setMemo(e.target.value)} /></label>}<button className="btn-primary wide">알리기</button></form></Modal>}
-  </div>;
+</div>;
 }

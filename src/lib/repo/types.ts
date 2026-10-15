@@ -1,6 +1,6 @@
 import type { Place, PlaceKind } from "@/lib/places";
 
-// NOPIUM 도메인 타입. 저장 방식(브라우저 체험 데이터 / 서버)과 무관하게 화면이 공유합니다.
+// NPIUM 도메인 타입. 저장 방식(브라우저 체험 데이터 / 서버)과 무관하게 화면이 공유합니다.
 
 export type CareStatus = "배정 대기" | "승인 대기" | "진행 중" | "종료";
 
@@ -35,6 +35,7 @@ export type Patient = {
   doctor?: string;
   /** 의사가 확인한 방문재활 처방: 기간·주간 횟수·치료 범위 */
   prescription?: Prescription;
+  activePrescriptionVersionId?: string;
   /** 자택 주소 (담당 치료사·보호자·병원만 열람). 출입 비밀번호 등은 저장하지 않습니다. */
   homeAddress?: string;
   /** 자택 방문 시 참고 (엘리베이터·주차·계단 등) */
@@ -47,7 +48,7 @@ export type Patient = {
   closure?: { at: string; by: string; summary: string };
 };
 
-/** 방문재활 처방. 시범사업 기준 최대 90일(30일 연장 가능), 주 2회 이내. */
+/** 방문재활 처방. 기간·주간 횟수는 병원에서 설정합니다. */
 export type Prescription = {
   doctor: string;
   startDate: string;
@@ -58,6 +59,16 @@ export type Prescription = {
   extendedDays?: number;
   /** 허용 장소 (자택 방문 / 제휴 센터) */
   places?: PlaceKind[];
+  /** 진료과 프로토콜 (src/lib/protocols.ts). 고르면 평가 지표·금기·주의사항이 붙습니다. */
+  protocolId?: string;
+  /** 금기 운동. 프로토콜 기본값에서 병원이 빼거나 직접 추가합니다. */
+  contraindications?: string[];
+  /** 주의사항 (한 줄에 하나) */
+  cautions?: string[];
+  /** 주치의 재활 소견 (퇴원 전 연계) */
+  doctorOpinion?: string;
+  /** 방문재활 동의서 받음 확인 */
+  consentChecked?: boolean;
 };
 
 /** 지역사회 연계 (병원 사회복지사 → 보건소·통합돌봄 창구 등). 의뢰와 결과를 남깁니다. */
@@ -118,13 +129,44 @@ export type CareRecord = {
   education?: string;
   /** 실제 진행한 장소 */
   place?: Place;
+  /** 병원이 정한 금기 운동을 하지 않았음을 치료사가 확인 */
+  contraChecked?: boolean;
   /** 마지막 저장 시각(ISO). */
   updatedAt?: string;
   authorId?: string;
   revisions?: RecordRevision[];
+  prescriptionVersionId?: string;
+  hospitalAtVisit?: string;
 };
 
-export type Report = { id: string; patientId: string; period: string; shared: boolean };
+/** 월간 경과 보고서. 숫자·회차 기록은 화면에서 자동으로 모으고, 여기에는 치료사가 쓴 부분과 공유 이력만 저장합니다. */
+export type Report = {
+  id: string;
+  patientId: string;
+  /** "2026년 10월" */
+  period: string;
+  shared: boolean;
+  /** 종합 소견 (치료사) */
+  opinion?: string;
+  /** 다음 달 계획 (치료사) */
+  plan?: string;
+  /** 영역별 판정 덮어쓰기 (자동 판정과 다를 때만) */
+  judgments?: Record<string, "개선" | "유지" | "악화">;
+  writtenBy?: string;
+  writtenAt?: string;
+  sharedAt?: string;
+  /** 병원 담당의 확인 */
+  confirmedBy?: string;
+  confirmedAt?: string;
+  providedBy?: string;
+  providedAt?: string;
+  reviewNote?: string;
+  snapshot?: { patient: Patient; records: CareRecord[]; assessments: Assessment[]; capturedAt: string };
+  version?: number;
+  supersedesId?: string;
+  supersededById?: string;
+  correctionReason?: string;
+};
 
 export type Assessment = {
   id: string;
@@ -139,11 +181,17 @@ export type Assessment = {
   environment: string;
   /** 표준 평가 도구 점수 등 (코드·값, null = 미측정) */
   measures?: Measure[];
+  /** 관절 가동범위 (관절·좌우·각도). 코드는 src/lib/assessment.ts */
+  romItems?: { code: string; side: "좌" | "우"; deg: number | null }[];
+  /** 도수근력검사 0~5등급 (근육·좌우) */
+  mmtItems?: { code: string; side: "좌" | "우"; grade: number | null }[];
+  /** 주거 환경 위험 요소 체크 */
+  homeRisks?: string[];
   by?: string;
 };
 
 /** 배정 상태는 프로그램 상태와 분리해서 기록합니다. (기획서 1장) */
-export type AssignmentStatus = "제안" | "수락" | "거절";
+export type AssignmentStatus = "제안" | "수락" | "거절" | "확정" | "취소";
 
 export type Assignment = {
   id: string;
@@ -154,6 +202,9 @@ export type Assignment = {
   createdAt: string;
   respondedAt?: string;
   reason?: string;
+  proposalId?: string;
+  by?: string;
+  adjustmentReason?: string;
 };
 
 /** 전문가 가입 신청. 비밀번호 등 인증 정보는 여기에 저장하지 않습니다(인증 서비스가 따로 보관). */
@@ -207,6 +258,8 @@ export type ScheduleRequest = {
 };
 
 export type CareState = {
+  demo?: boolean;
+  providerControlHistory?: ProviderControl[];
   patients: Patient[];
   records: CareRecord[];
   reports: Report[];
@@ -217,23 +270,45 @@ export type CareState = {
   messages: ChatMessage[];
   scheduleRequests: ScheduleRequest[];
   linkages: Linkage[];
-  /** NOPIUM ↔ 병원 이용 계약 (수수료 기준) */
+  /** NPIUM ↔ 병원 이용 계약 (수수료 기준) */
   contracts: Contract[];
   /** 기관·월별 청구 상태. 키: `${기관}|${YYYY-MM}` */
   billing: Record<string, BillingEntry>;
   /** 문의(운영팀 문의방) 처리 상태. 키: 채팅 threadId */
   inquiries: Record<string, InquiryMeta>;
+  reevaluations: Reevaluation[];
+  prescriptionDrafts: PrescriptionDraft[];
+  prescriptionVersions: PrescriptionVersion[];
+  prescriptionAcknowledgments: PrescriptionAcknowledgment[];
+  providerControls: Record<string, ProviderControl>;
+  registeredProviders: RegisteredProvider[];
+  qualityReviews: QualityReview[];
+  satisfactions: Satisfaction[];
+  hospitalReviews: HospitalReview[];
 };
 
 /** 병원 이용 계약. 회차당 수수료(확정된 방문 회차 × 단가) 또는 월 정액. */
 export type Contract = { organization: string; model: "회차당" | "월 정액"; unitFee: number; monthlyFee: number; since: string; manager: string };
-export type BillingEntry = { status: "청구 전" | "청구 완료" | "입금 완료"; issuedAt?: string; paidAt?: string; memo?: string };
+export type BillingEntry = { status: "청구 전" | "청구 완료" | "입금 완료"; issuedAt?: string; paidAt?: string; memo?: string; snapshot?: BillingSnapshot; adjustments?: BillingAdjustment[] };
+export type BillingSnapshot = { contract: Contract; recordIds: string[]; sourceSignature: string; visits: number; supply: number; vat: number; total: number; capturedAt: string };
+export type BillingAdjustment = { id: string; amount: number; reason: string; by: string; at: string };
+export type Reevaluation = { id: string; patientId: string; reportId: string; date: string; opinion: string; contraindications: string[]; cautions: string[]; decision: "기존 승인 유지" | "변경안 검토" | "추가 확인 필요"; by: string; at: string };
+export type PrescriptionDraft = { id: string; patientId: string; prescription: Prescription; precautions: string; effectiveFrom: string; baseVersionId?: string; baseSignature: string; reportId?: string; reevaluationId?: string; by: string; at: string; status: "작성 중" | "승인"; revision: number };
+export type PrescriptionVersion = { id: string; patientId: string; version: number; prescription: Prescription; precautions: string; effectiveFrom: string; by: string; at: string; reportId?: string; reevaluationId?: string; draftId?: string };
+export type PrescriptionAcknowledgment = { id: string; patientId: string; versionId: string; providerId: string; by: string; at: string };
+export const PROVIDER_CHECKS = ["면허 인증", "경력 검증", "범죄·사고 이력 확인", "보험 가입 확인"] as const;
+export type ProviderCheck = (typeof PROVIDER_CHECKS)[number];
+export type ProviderControl = { providerId: string; checks: Partial<Record<ProviderCheck, { confirmed: boolean; reference: string }>>; insuranceUntil: string; grade: "미지정" | "Junior" | "Senior" | "Specialist" | "VIP 전담"; hold: boolean; reason: string; by: string; at: string };
+export type RegisteredProvider = { id: string; name: string; license: string; years: number; focus: string[]; visit: string[]; area: string; applicationId: string };
+export type QualityReview = { id: string; providerId: string; month: string; findings: string; action: "활동 유지" | "보완 요청" | "배정 보류"; by: string; at: string };
+export type Satisfaction = { id: string; patientId: string; providerId: string; month: string; score: number; maxScore: number; note: string; by: string; at: string };
+export type HospitalReview = { id: string; hospital: string; month: string; findings: string; action: string; followUp: string; by: string; at: string };
 export type InquiryMeta = { status: "접수" | "처리 중" | "완료"; category: string; assignee?: string; memo?: string; updatedAt: string };
 
 export type ProviderRef = { id: string; name: string };
 
 export type RecordInput = Pick<CareRecord, "content" | "next" | "walk" | "pain"> &
-  Partial<Pick<CareRecord, "attendance" | "absenceReason" | "durationMin" | "activities" | "measures" | "adverse" | "education" | "place">> & {
+  Partial<Pick<CareRecord, "attendance" | "absenceReason" | "durationMin" | "activities" | "measures" | "adverse" | "education" | "place" | "contraChecked">> & {
     id?: string;
     /** 진행일 (기본: 오늘) */
     date?: string;
@@ -256,13 +331,15 @@ export interface CareRepository {
   changePatient(id: string, patch: Partial<Patient>): void;
 
   /** 운영자가 제공자에게 배정을 제안합니다. 제공자가 수락해야 담당이 됩니다. */
-  proposeAssignment(patientId: string, provider: ProviderRef): void;
+  proposeAssignment(patientId: string, provider: ProviderRef, reason?: string, by?: string): boolean;
   acceptAssignment(patientId: string, provider: ProviderRef): void;
   declineAssignment(patientId: string, provider: ProviderRef, reason: string): void;
+  finalizeAssignment(patientId: string, expectedAssignmentId: string, by: string): boolean;
+  cancelAssignment(patientId: string, expectedAssignmentId: string, by: string, reason: string): boolean;
 
   /** 병원·기관의 계획 승인. 승인되면 프로그램이 진행 중이 됩니다. */
   approvePlan(patientId: string, by: string, precautions: string, prescription?: Prescription): void;
-  /** 처방 기간 연장 (최대 30일) */
+  /** 기존 호환용 기간 변경. 새 화면은 변경안 승인 절차를 사용합니다. */
   extendPrescription(patientId: string, days: number, by: string): void;
   /** 담당 의사가 이상 반응 기록을 확인합니다. */
   reviewAdverse(recordId: string, by: string, note: string): void;
@@ -296,6 +373,22 @@ export interface CareRepository {
 
   addAssessment(assessment: Omit<Assessment, "id">): void;
   shareReport(patientId: string, period: string): void;
+  /** 월간 보고서의 치료사 작성 부분 저장 (share=true면 확정·공유) */
+  saveReport(patientId: string, period: string, fields: Pick<Report, "opinion" | "plan" | "judgments" | "writtenBy">, share: boolean): void;
+  /** 병원 담당의가 공유된 보고서를 확인 */
+  confirmReport(patientId: string, period: string, by: string): void;
+  provideReport(patientId: string, month: string, by: string, note: string, reviewedSignature?: string): boolean;
+  reviseReport(reportId: string, reason: string, by: string): boolean;
+  confirmReportVersion(reportId: string, by: string): boolean;
+  saveReevaluation(input: Omit<Reevaluation, "id" | "at">): string;
+  savePrescriptionDraft(input: Omit<PrescriptionDraft, "id" | "at" | "baseSignature" | "baseVersionId" | "status" | "revision">, expectedBaseSignature?: string): string;
+  approvePrescriptionDraft(id: string, revision: number, by: string): boolean;
+  acknowledgePrescription(patientId: string, versionId: string, provider: ProviderRef): boolean;
+  setProviderControl(control: Omit<ProviderControl, "at">): boolean;
+  saveQualityReview(input: Omit<QualityReview, "id" | "at">): boolean;
+  saveSatisfaction(input: Omit<Satisfaction, "id" | "at">): boolean;
+  saveHospitalReview(input: Omit<HospitalReview, "id" | "at">): boolean;
+  adjustBilling(key: string, amount: number, reason: string, by: string): boolean;
   toggleHomeTask(taskId: string): void;
 
   reset(): void;

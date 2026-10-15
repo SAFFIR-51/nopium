@@ -1,18 +1,20 @@
+import { getAccount } from "./auth-client";
 import { visiblePatients } from "@/lib/access";
 import { expertPortraits } from "@/lib/expert-portraits";
 import type { CareState, ChatMessage } from "@/lib/repo";
-import { DEMO_ACCOUNTS, demoProvider, type Role } from "@/lib/session";
+import { DEMO_ACCOUNTS, DEMO_MODE, demoProvider, type Role } from "@/lib/session";
 
 /**
  * 채팅방 규칙 (체험용)
  * - care-{대상 id}: 대상의 보호자 계정 ↔ 담당 제공자. 담당이 바뀌면 새 담당자가 이어서 봅니다.
- * - support-{계정 키}: 각 계정 ↔ NOPIUM 운영팀 문의방.
+ * - support-{계정 키}: 각 계정 ↔ NPIUM 운영팀 문의방.
  * 실제 서비스에서는 서버가 방 참여자와 열람 권한을 검증해야 합니다. (기획서 5장)
  */
 
 export type ChatAccount = { key: string; name: string };
 
 export function chatAccount(role: Role | null): ChatAccount | null {
+  if (!DEMO_MODE) { const a = getAccount(); return a ? { key: a.role === "provider" ? a.providerId : a.id, name: a.name } : null; }
   switch (role) {
     case "patient": return { key: DEMO_ACCOUNTS.patient.id, name: DEMO_ACCOUNTS.patient.name };
     case "provider": { const p = demoProvider(); return p ? { key: p.id, name: p.name } : null; }
@@ -35,7 +37,7 @@ export type ChatThread = {
   closed?: string;
 };
 
-const supportTitle = "NOPIUM 운영팀";
+const supportTitle = "NPIUM 운영팀";
 const accountLabel: Record<string, string> = {
   [DEMO_ACCOUNTS.patient.id]: `${DEMO_ACCOUNTS.patient.name} 님 (보호자)`,
   [DEMO_ACCOUNTS.hospital.id]: `${DEMO_ACCOUNTS.hospital.organization}`,
@@ -70,7 +72,7 @@ export function threadsFor(state: CareState, role: Role | null): ChatThread[] {
     // 담당 대상이 있는 제공자는 모두 문의방을 둡니다 (기록 누락 확인 등).
     const providerLabel = Object.fromEntries(state.patients.filter(p => p.providerId).map(p => [p.providerId as string, `${p.provider} 선생님`]));
     const label = (key: string) => accountLabel[key] ?? providerLabel[key] ?? key;
-    const keys = new Set([DEMO_ACCOUNTS.patient.id, DEMO_ACCOUNTS.provider.id, DEMO_ACCOUNTS.hospital.id, ...Object.keys(providerLabel), ...state.messages.filter(m => m.threadId.startsWith("support-")).map(m => m.threadId.slice(8))]);
+    const keys = new Set([...(DEMO_MODE ? [DEMO_ACCOUNTS.patient.id, DEMO_ACCOUNTS.provider.id, DEMO_ACCOUNTS.hospital.id] : []), ...Object.keys(providerLabel), ...state.messages.filter(m => m.threadId.startsWith("support-")).map(m => m.threadId.slice(8))]);
     for (const key of keys) out.push(thread(state, me, { id: `support-${key}`, title: label(key), subtitle: "운영팀 문의방", avatar: label(key).slice(0, 1) }));
   }
   // 최근 대화가 위로

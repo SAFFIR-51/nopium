@@ -1,0 +1,28 @@
+/* 구조화 평가 (방문 전·중간·종료) */
+.asf .srf-measures table{width:100%}
+.asf-protocol{display:flex;align-items:center;gap:6px;margin:0;padding:8px 12px;border-radius:8px;background:#f4f1fe;color:#4b3aa8;font-size:12px}
+.asf-protocol b{font-weight:600}
+.asf-focus td:first-child b{color:#4b3aa8}
+.asf-star{color:#6935f5}
+.asf-risk{margin:-4px 0 0;padding:8px 12px;border-radius:8px;background:#f5f7f9;font-size:12px;line-height:1.6;color:#4b5563}
+.asf-risk.high{background:#fdecec;color:#b42318}
+.asf-risk small{display:block;color:#9aa1ad;font-size:11px}
+.asf-grid td{vertical-align:top}
+.asf-grid td:first-child{position:relative}
+.asf-grid select{width:100%;min-width:0;height:40px;padding:0 28px 0 10px;line-height:normal;font-size:12px}
+.asf-prev{display:block;margin-top:2px;font-size:11px;color:#9aa1ad}
+.asf-remove{display:inline-block;margin-top:4px;padding:0;border:0;background:none;font-size:11px;color:#9aa1ad;text-decoration:underline;cursor:pointer}
+.asf-add{margin-top:8px;height:40px;max-width:220px;padding:0 28px 0 10px;line-height:normal;font-size:13px}
+.asf-empty{margin:0;font-size:12px;color:#9aa1ad}
+
+/* 비교 표 */
+.asc-table .asc-group td{padding-top:12px;font-size:11px;font-weight:600;color:#6b7280;background:transparent}
+.asc-hidden{margin:4px 0 0;font-size:11px;color:#9aa1ad}
+.asc-risk{margin:8px 0 0;font-size:12px;color:#4b5563}
+.asc-risk .bad,.asd .bad{color:#b42318}
+.asc-risk .good{color:#067647}
+
+/* 평가 한 건 상세 */
+.asd{display:grid;gap:4px;margin-top:6px}
+.asd p{margin:0;font-size:12px;line-height:1.6;color:#4b5563}
+.asd p span{display:inline-block;min-width:84px;margin-right:6px;color:#9aa1ad}

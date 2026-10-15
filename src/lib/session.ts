@@ -22,7 +22,7 @@ export const DEMO_ACCOUNTS = {
   patient: { id: "demo-guardian", name: "김지은", relation: "보호자" },
   provider: { id: "park" },
   hospital: { id: "demo-hospital", name: "이하늘", title: "연계 코디네이터", organization: "새봄재활의학과", doctors: ["정윤호 (재활의학과 전문의)", "김서진 (재활의학과 전문의)"], socialWorker: "오미래 (의료사회복지사)" },
-  admin: { id: "demo-admin", name: "NOPIUM 운영팀" },
+  admin: { id: "demo-admin", name: "NPIUM 운영팀" },
 } as const;
 
 /** 체험 모드에서 사용할 예시 제공자 id. */

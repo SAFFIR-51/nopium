@@ -1,10 +1,10 @@
 "use client";
+import { Modal } from "@/components/CareUI";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { expertPortraits } from "@/lib/expert-portraits";
 import { Icon } from "@/components/Icon";
-import { Modal } from "@/components/CareUI";
 import { conditions, experts, type Expert } from "@/lib/data";
 import "./directory-v2.css";
 
@@ -36,9 +36,10 @@ export default function ExpertsPage() {
   function openDialog(kind: "service" | "region") { setFilterSearch(""); setDialog(kind); }
   function toggleSaved(id: string) { setSaved(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]); }
 
+
   return <div className="provider-directory directory-v2">
     <h1>전문가 찾기</h1>
-    <div className="directory-v2-filters"><button className={focus ? "chosen" : ""} onClick={() => openDialog("service")} aria-haspopup="dialog" aria-expanded={dialog === "service"}>{focus || "서비스"}<Icon name="down" size={17} /></button><button className={region !== "전체 지역" ? "chosen" : ""} onClick={() => openDialog("region")} aria-haspopup="dialog" aria-expanded={dialog === "region"}>{region === "전체 지역" ? "지역" : region}<Icon name="down" size={17} /></button></div>
+    <div className="directory-v2-filters"><button className={focus ? "chosen" : ""} onClick={() => openDialog("service")} aria-expanded={dialog === "service"}>{focus || "서비스"}<Icon name="down" size={17} /></button><button className={region !== "전체 지역" ? "chosen" : ""} onClick={() => openDialog("region")} aria-expanded={dialog === "region"}>{region === "전체 지역" ? "지역" : region}<Icon name="down" size={17} /></button></div>
 
     <div className="directory-v2-columns"><aside className="directory-v2-sidebar"><div className="directory-v2-sidebar-head"><b>필터</b><button onClick={reset}>초기화 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true"><path d="M19 8a8 8 0 1 1-7-4h6m0 0-3-3m3 3-3 3" /></svg></button></div>
       {!focus ? <div className="directory-v2-tip"><h2>서비스 분야를 선택해 주세요.</h2><p>서비스 분야를 선택하면 나에게 맞는<br />전문가를 필터링해 찾아볼 수 있어요.</p></div> : <section className="directory-v2-method"><h2>진행 방식</h2>{["전체 방식", "방문", "센터", "비대면 점검"].map(m => <label key={m}><input type="radio" name="directory-method" checked={method === m} onChange={() => setMethod(m)} />{m}</label>)}</section>}
@@ -58,6 +59,8 @@ export default function ExpertsPage() {
 
     <button className="directory-v2-saved-float" aria-pressed={onlySaved} onClick={() => { setOnlySaved(!onlySaved); requestAnimationFrame(() => list.current?.scrollIntoView({ behavior: "smooth", block: "start" })); }}><Heart size={19} />{onlySaved ? "전체 전문가" : "찜한 전문가"}{saved.length > 0 && <span>{saved.length}</span>}</button>
 
+
+
     {dialog && <Modal title={dialog === "service" ? "서비스 선택" : "지역 선택"} onClose={() => setDialog(null)}><div className="directory-v2-dialog-tabs" role="tablist" aria-label="검색 조건"><button role="tab" aria-selected={dialog === "service"} onClick={() => { setDialog("service"); setFilterSearch(""); }}>서비스</button><button role="tab" aria-selected={dialog === "region"} onClick={() => { setDialog("region"); setFilterSearch(""); }}>지역</button></div><label className="directory-v2-dialog-search"><Icon name="search" size={18} /><input aria-label={dialog === "service" ? "서비스 분야 검색" : "지역 검색"} placeholder={dialog === "service" ? "서비스를 검색하세요" : "지역을 검색하세요"} value={filterSearch} onChange={e => setFilterSearch(e.target.value)} /></label><div className="directory-v2-dialog-options">{dialog === "service" ? [{ key: "all", label: "서비스 전체" }, ...conditions].filter(c => c.label.includes(filterSearch)).map(c => <button key={c.key} aria-pressed={focus === (c.key === "all" ? "" : c.label)} onClick={() => { setFocus(c.key === "all" ? "" : c.label); setDialog(null); }}><span>{c.label}</span><Icon name="chevron" size={17} /></button>) : ["전체 지역", "서울", "경기"].filter(r => r.includes(filterSearch)).map(r => <button key={r} aria-pressed={region === r} onClick={() => { setRegion(r); setDialog(null); }}><span>{r}</span><Icon name="chevron" size={17} /></button>)}</div></Modal>}
-  </div>;
+</div>;
 }

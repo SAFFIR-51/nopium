@@ -1,5 +1,5 @@
 /* Keep short referral pages above the footer for the initial viewport. */
-.nopium-home.referral-mode { min-height: calc(100svh - 72px); }
+.npium-home.referral-mode { min-height: calc(100svh - 72px); }
 
 /* Profile photographs replace initials; recommendation panels stay white. */
 .directory-v2 .directory-v2-recommend { background: none; border-radius: 0; padding-bottom: 0; }
@@ -41,7 +41,7 @@
 .request-flow .request-selected-expert small { font-size: 12px; line-height: 20px; }
 .request-flow .request-selected-expert a { font-size: 12px; }
 @media(max-width:700px) {
- .nopium-home.referral-mode { min-height: calc(100svh - 61px); }
+ .npium-home.referral-mode { min-height: calc(100svh - 61px); }
  .request-flow .request-flow-body { padding: 23px 0 44px; }
  .request-flow .request-greeting p { font-size: 13px; line-height: 22px; }
  .request-flow .request-question { padding: 24px 20px; }

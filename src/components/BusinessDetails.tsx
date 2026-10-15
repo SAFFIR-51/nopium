@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Modal } from "@/components/CareUI";
+import { PagePanel } from "@/components/CareUI";
 import { BusinessStatus } from "@/components/BusinessTable";
 import { experts } from "@/lib/data";
 import type { Patient } from "@/lib/repo";
@@ -10,8 +10,8 @@ export function ExpertName({ id, name }: { id?: string; name?: string }) {
   return expert ? <Link className="business-name-link" href={`/experts/${expert.id}`}>{name || expert.name}</Link> : <span>{name || "미배정"}</span>;
 }
 
-export function PatientInfoModal({ patient: p, onClose }: { patient: Patient; onClose: () => void }) {
-  return <Modal title={`${p.name} · 대상자 정보`} wide onClose={onClose}>
+export function PatientInfoPage({ patient: p, onClose }: { patient: Patient; onClose: () => void }) {
+  return <PagePanel title={`${p.name} · 대상자 정보`} wide onClose={onClose}>
     <div className="hospital-review">
       <div className="hospital-review-heading"><h3>대상자 및 프로그램 정보</h3><BusinessStatus>{p.status}</BusinessStatus></div>
       <dl className="hospital-review-grid">
@@ -31,5 +31,5 @@ export function PatientInfoModal({ patient: p, onClose }: { patient: Patient; on
       </dl>
       <div className="modal-actions"><button className="business-action" onClick={onClose}>닫기</button></div>
     </div>
-  </Modal>;
+  </PagePanel>;
 }

@@ -7,12 +7,12 @@ import { daysLeft, hasAssessment } from "@/lib/program";
 import { useCare, type InquiryMeta } from "@/lib/repo";
 import { DEMO_ACCOUNTS } from "@/lib/session";
 import { useToday } from "@/lib/use-today";
+import { matchingStatus } from "@/lib/assignment";
 
 export type InquiryRow = { id: string; who: string; kind: "보호자" | "병원" | "치료사" | "기타"; last?: { text: string; at: string; fromAdmin: boolean }; meta: InquiryMeta; unread: number };
 
 /**
- * NOPIUM 운영(ERP): 배정은 병원이 하고, 운영팀은 수수료·진행 현황·문의를 관리합니다.
- * 운영 목적 밖의 건강 정보는 일괄 열람하지 않는다는 원칙(기획서 5장)에 따라 단계·건수 위주로 씁니다.
+ * NPIUM 운영: 매칭·기록·보고·정산·인증과 운영에 필요한 환자 데이터를 연결합니다.
  */
 export function useAdminCare() {
   const state = useCare();
@@ -34,6 +34,7 @@ export function useAdminCare() {
   const ending = today ? state.patients.filter(p => { const d = daysLeft(p, today); return p.status === "진행 중" && d !== null && d >= 0 && d <= 14 && !hasAssessment(state, p.id, "사후 평가"); }) : [];
   const waitingAssign = state.patients.filter(p => p.status === "배정 대기");
   const applications = state.applications.filter(a => a.status === "검수 대기");
+  const matchingNeeded = state.patients.filter(p => ["미배정", "NPIUM 확인 대기", "재배정 필요", "기존 배정 확인 필요"].includes(matchingStatus(state, p.id)));
   return { state, today, inquiries, openInquiries, bills, toInvoice, unpaid, missing, unreviewed, ending, waitingAssign, applications,
-    actionCount: openInquiries.length + toInvoice.length + unpaid.length + applications.length };
+    matchingNeeded, actionCount: openInquiries.length + toInvoice.length + unpaid.length + applications.length + matchingNeeded.length + missing.length + unreviewed.length };
 }

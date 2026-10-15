@@ -8,14 +8,12 @@ export function useProviderCare() {
   const provider = useCurrentProvider();
   if (!provider) return null;
   const mine = (p: Patient) => p.providerId === provider.id;
-  const declinedByMe = new Set(
-    state.assignments.filter(a => a.providerId === provider.id && a.status === "거절").map(a => a.patientId),
-  );
   const patients = state.patients.filter(mine);
-  // 지정·제안받은 요청과, 아직 아무에게도 지정되지 않은 요청을 봅니다. 한 번 거절한 요청은 다시 보지 않습니다.
-  const requests = state.patients.filter(
-    p => p.status === "배정 대기" && (!p.requestedProviderId || p.requestedProviderId === provider.id) && !declinedByMe.has(p.id),
-  );
+  // 응답한 요청은 새 요청에서 제외하고, 현재 유효한 매칭 제안만 표시합니다.
+  const requests = state.patients.filter(p => {
+    const latest = state.assignments.find(a => a.patientId === p.id);
+    return p.status !== "종료" && latest?.status === "제안" && latest.providerId === provider.id;
+  });
   const proposedToMe = new Set(
     state.assignments.filter(a => a.providerId === provider.id && a.status === "제안").map(a => a.patientId),
   );

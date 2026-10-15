@@ -63,6 +63,7 @@ export function ScheduleView() {
   const move = (n: number) => { const d = new Date(y, m + n, 1); setCursor({ y: d.getFullYear(), m: d.getMonth() }); };
   const list = on(day);
 
+  if (record) return <SessionReportForm patient={record.patient} defaultDate={record.date} author={data.ref} onClose={() => setRecord(null)} />;
   return <div className="sg sg-work my-home my-sub-view">
     <ExpertSubHeader title="일정표" subtitle={`이번 달 진행 ${inMonth.filter(e => e.kind === "완료").length}회 · 예정 ${inMonth.filter(e => e.kind === "예정").length}회`} />
 
@@ -104,6 +105,6 @@ export function ScheduleView() {
     </section>) : <section className="sg-card sg-empty">이 날은 일정이 없어요.</section>}
     <p className="sg-foot">다음 회차 일정은 보고서를 쓸 때 정해요. 바뀐 일정은 보호자 화면에도 바로 보여요.</p>
 
-    {record && <SessionReportForm patient={record.patient} defaultDate={record.date} author={data.ref} onClose={() => setRecord(null)} />}
+
   </div>;
 }

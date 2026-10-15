@@ -27,13 +27,13 @@ export function Inquiries() {
         {rows.map(i => <tr key={i.id}>
           <td className="business-nowrap"><b>{i.who}</b>{i.unread > 0 && <small>새 메시지 {i.unread}</small>}</td>
           <td>{i.kind}</td>
-          <td><select aria-label="분류" value={i.meta.category} onChange={e => careRepo.setInquiry(i.id, { category: e.target.value })}>{CATEGORIES.map(c => <option key={c}>{c}</option>)}</select></td>
+          <td><select aria-label="분류" value={i.meta.category} onChange={async e => await careRepo.setInquiry(i.id, { category: e.target.value })}>{CATEGORIES.map(c => <option key={c}>{c}</option>)}</select></td>
           <td className="business-wrap">{i.last?.fromAdmin ? "↳ 답변: " : ""}{i.last?.text.slice(0, 60)}</td>
           <td className="business-nowrap">{when(i.last?.at)}</td>
-          <td><input className="business-input" aria-label="담당자" defaultValue={i.meta.assignee ?? ""} placeholder="담당자" onBlur={e => e.target.value !== (i.meta.assignee ?? "") && careRepo.setInquiry(i.id, { assignee: e.target.value })} /></td>
+          <td><input className="business-input" aria-label="담당자" defaultValue={i.meta.assignee ?? ""} placeholder="담당자" onBlur={async e => e.target.value !== (i.meta.assignee ?? "") && await careRepo.setInquiry(i.id, { assignee: e.target.value })} /></td>
           <td><BusinessStatus>{i.meta.status === "완료" ? "처리 완료" : i.meta.status === "접수" ? "접수 대기" : "처리 중"}</BusinessStatus></td>
-          <td><div className="business-actions"><Link className="business-action primary" href={`/chat?c=${i.id}`} onClick={() => i.meta.status === "접수" && careRepo.setInquiry(i.id, { status: "처리 중" })}>답변하기</Link>
-            {i.meta.status !== "완료" ? <button className="business-action" onClick={() => careRepo.setInquiry(i.id, { status: "완료" })}>완료</button> : <button className="business-action" onClick={() => careRepo.setInquiry(i.id, { status: "처리 중" })}>다시 열기</button>}</div></td>
+          <td><div className="business-actions"><Link className="business-action primary" href={`/chat?c=${i.id}`} onClick={async () => i.meta.status === "접수" && await careRepo.setInquiry(i.id, { status: "처리 중" })}>답변하기</Link>
+            {i.meta.status !== "완료" ? <button className="business-action" onClick={async () => await careRepo.setInquiry(i.id, { status: "완료" })}>완료</button> : <button className="business-action" onClick={async () => await careRepo.setInquiry(i.id, { status: "처리 중" })}>다시 열기</button>}</div></td>
         </tr>)}
       </BusinessTable>
     </section>

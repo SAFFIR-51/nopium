@@ -82,10 +82,11 @@ export function JoinFlow() {
   const percent = done ? 100 : Math.round((step / titles.length) * 100);
   const move = (next: number) => { setStep(next); setTouched(false); window.scrollTo({ top: 0, behavior: "instant" }); };
   const next = () => { if (!valid[step]) { setTouched(true); return; } if (step === titles.length - 1) submit(); else move(step + 1); };
-  const submit = () => {
+  const submit = async () => {
     if (submitted.current) return;
     submitted.current = true;
-    careRepo.submitApplication({ license, programs, methods: ways, regions: areas, licenseNumber: licenseNumber.trim(), years: yearsNum, insurance: insurance as "가입" | "준비 중", documentName: documentName || undefined, name: name.trim(), phone, email, marketing: agreed.marketing });
+    const applicationId = await careRepo.submitApplication({ license, programs, methods: ways, regions: areas, licenseNumber: licenseNumber.trim(), years: yearsNum, insurance: insurance as "가입" | "준비 중", documentName: documentName || undefined, name: name.trim(), phone, email, marketing: agreed.marketing });
+    if (!applicationId) return;
     setPassword("");
     setDone(true);
     window.scrollTo({ top: 0, behavior: "instant" });

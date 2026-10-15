@@ -254,3 +254,5 @@
 .my-picker .my-avatar{width:32px;height:32px;font-size:13px}
 @media(max-width:640px){.my-picker,.my-picker-btn{width:100%}.my-picker-menu{max-width:none;width:100%}}
 
+
+.patient-choice-list{display:grid;gap:12px}.patient-choice-list button{display:flex;align-items:center;justify-content:space-between;text-align:left;border:1px solid #e1e5ec;border-radius:8px;padding:16px;gap:12px;width:100%}.patient-choice-list button[aria-pressed=true]{border-color:#7951e8;background:#f8f5ff}.patient-choice-list small{display:block;margin-top:7px;color:#6c7683;font-size:12px}.patient-choice-list svg{color:#7541f4;flex:none}

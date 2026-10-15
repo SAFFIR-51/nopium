@@ -31,6 +31,6 @@ export function MyRequests() {
         <p className="sr">{todo.who} {todo.what}</p>
       </section>;
     }) : <section className="sg-card sg-empty">연결된 프로그램이 없어요. 퇴원 병원에 방문재활 연계를 요청해 보세요.</section>}
-    <p className="sg-foot">진료·처방 관련 문의는 퇴원한 병원으로, 이용 문의는 NOPIUM 운영팀으로 해 주세요.</p>
+    <p className="sg-foot">진료·처방 관련 문의는 퇴원한 병원으로, 이용 문의는 NPIUM 운영팀으로 해 주세요.</p>
   </div>;
 }

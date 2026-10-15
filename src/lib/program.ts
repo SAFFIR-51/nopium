@@ -1,15 +1,16 @@
 import type { CareRecord, CareState, Patient } from "@/lib/repo";
 
 /**
- * 병원 연계형 방문재활의 6단계 (재활의료기관 퇴원환자 방문재활 시범사업 흐름 기준).
- * 퇴원 계획 → 방문 전 평가 → 계획·의사 확인 → 회차 방문 → 종료 재평가 → 종료·지역사회 연계.
- * 물리치료사는 의료기사법상 의사의 지도 아래에서만 방문하므로, 의사 확인 전에는 회차 보고서를 쓸 수 없습니다.
+ * 원문 네 단계와 세부 업무 상태를 구분합니다.
+ * 아래 STAGES는 화면의 후속 업무를 고르는 세부 상태이며 임상 판단 기준이 아닙니다.
  */
 export const STAGES = ["의뢰 접수", "방문 전 평가", "계획·의사 확인", "방문 재활", "종료 평가", "종료·연계"] as const;
 export type Stage = (typeof STAGES)[number];
 
-/** 시범사업 기준 한도 */
-export const LIMITS = { periodDays: 90, maxExtendDays: 30, perWeek: 2, minMinutes: 60 };
+export const CARE_STAGES = ["퇴원 전 연계", "초기 방문 평가", "방문 운동 치료", "데이터화 및 병원 리포팅"] as const;
+export type CareStage = (typeof CARE_STAGES)[number];
+export const SERVICE_VISIT = { minMinutes: 50, maxMinutes: 60 };
+export function carePhase(stage: Stage): CareStage { return stage === "의뢰 접수" || stage === "계획·의사 확인" ? CARE_STAGES[0] : stage === "방문 전 평가" ? CARE_STAGES[1] : stage === "방문 재활" ? CARE_STAGES[2] : CARE_STAGES[3]; }
 
 export const hasAssessment = (state: CareState, patientId: string, period: string) =>
   state.assessments.some(a => a.patientId === patientId && a.period === period);
@@ -17,7 +18,8 @@ export const hasAssessment = (state: CareState, patientId: string, period: strin
 export function programStage(state: CareState, p: Patient, today?: string | null): Stage {
   if (p.status === "종료") return "종료·연계";
   if (p.status === "배정 대기") return "의뢰 접수";
-  if (p.status === "승인 대기") return hasAssessment(state, p.id, "초기 평가") ? "계획·의사 확인" : "방문 전 평가";
+  if (p.status === "승인 대기") return "계획·의사 확인";
+  if (!hasAssessment(state, p.id, "초기 평가")) return "방문 전 평가";
   // 진행 중: 사후 평가가 있거나, 회차를 다 채웠거나, 처방 기간이 끝났으면 종료 평가 단계
   const ended = !!(today && p.prescription && today > p.prescription.endDate);
   if (hasAssessment(state, p.id, "사후 평가") || p.completed >= p.total || ended) return "종료 평가";
@@ -53,7 +55,7 @@ export function scheduleProblem(p: Patient, records: CareRecord[], nextDate: str
 /** 단계마다 지금 누가 무엇을 해야 하는지 (화면 안내 문구) */
 export function stageTodo(stage: Stage): { who: string; what: string } {
   switch (stage) {
-    case "의뢰 접수": return { who: "병원", what: "담당 치료사를 배정해요" };
+    case "의뢰 접수": return { who: "NPIUM", what: "병원에서 연계한 환자의 담당 치료사를 확인·매칭해요" };
     case "방문 전 평가": return { who: "담당 치료사", what: "면담과 신체기능·주거환경 평가를 해요" };
     case "계획·의사 확인": return { who: "담당 의사", what: "평가를 보고 방문 계획과 처방을 확인해요" };
     case "방문 재활": return { who: "담당 치료사", what: "처방 범위 안에서 방문하고 회차 보고서를 써요" };

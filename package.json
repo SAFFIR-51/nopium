@@ -1,12 +1,17 @@
 {
-  "name": "nopium",
+  "name": "npium",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "local:account": "node scripts/local-account.mjs",
+    "local:dev": "node scripts/local-server.mjs dev",
+    "local:build": "node scripts/local-server.mjs build",
+    "local:start": "node scripts/local-server.mjs start",
+    "test": "node --test tests/*.test.cjs"
   },
   "dependencies": {
     "next": "16.4.0",

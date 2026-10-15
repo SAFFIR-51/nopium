@@ -1,9 +1,8 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Icon } from "@/components/Icon";
 import { Modal } from "@/components/CareUI";
+import Image from "next/image";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { Icon } from "@/components/Icon";
 import { type Expert, won } from "@/lib/data";
 import { expertPortraits } from "@/lib/expert-portraits";
 
@@ -19,11 +18,11 @@ const programDescriptions: Record<string, string> = {
 export function ExpertProfile({ expert: e }: { expert: Expert }) {
   const [saved, setSaved] = useState(false);
   const [sharing, setSharing] = useState(false);
-  const [shareUrl, setShareUrl] = useState("");
+  const shareOrigin = useSyncExternalStore(() => () => {}, () => window.location.origin, () => "");
+  const shareUrl = `${shareOrigin}/experts/${e.id}`;
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState("");
   const openShare = () => {
-    setShareUrl(`${window.location.origin}/experts/${e.id}`);
     setCopied(false);
     setCopyError("");
     setSharing(true);
@@ -59,7 +58,8 @@ export function ExpertProfile({ expert: e }: { expert: Expert }) {
     }, { rootMargin: "-125px 0px -55% 0px", threshold: 0 });
     document.querySelectorAll(".expert-page .expert-section").forEach(node => observer.observe(node));
     return () => observer.disconnect();
-  }, [e.id]);
+  }, [e.id, sharing]);
+
 
   return <div className="expert-page"><div className="expert-container">
     <header className="expert-identity">
@@ -101,6 +101,8 @@ export function ExpertProfile({ expert: e }: { expert: Expert }) {
     <aside className="expert-booking"><div><p><b>{e.name}</b> 전문가에게<br />원하는 프로그램을 신청해 보세요.</p><a href={href} className="expert-apply">프로그램 신청하기</a></div><p className="expert-booking-note">조건을 확인한 뒤 일정을 조율합니다.</p></aside>
     </div>
     <div className="expert-mobile-apply"><span>{won(e.price)}<small> / 회 · 예시</small></span><a href={href}>신청하기</a></div>
+
+  </div>
     {sharing && <Modal title="프로필 공유" onClose={() => setSharing(false)}><p className="profile-share-description">{e.name} 전문가의 프로필 링크를 공유해 보세요.</p><input className="profile-share-link" aria-label="프로필 공유 링크" value={shareUrl} readOnly onFocus={event => event.currentTarget.select()}/><button className="profile-share-copy" onClick={copyShare}>{copied ? "복사 완료" : "링크 복사"}</button>{copied && <p className="profile-share-status" role="status">링크를 복사했어요.</p>}{copyError && <p className="profile-share-error" role="alert">{copyError}</p>}</Modal>}
-  </div></div>;
+</div>;
 }

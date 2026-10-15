@@ -3,7 +3,7 @@ import type { CareRecord, CareState, Measure } from "@/lib/repo";
 // 항목은 대상에게 필요한 것만 기록하고, 모든 대상에게 일괄 적용하지 않습니다.
 // 실제 항목·방법은 연계 기관의 평가 기준에 맞춰 조정합니다.
 
-export type MeasureCode = "walk_distance" | "walk_10m" | "sts5" | "single_leg" | "pain_nrs" | "kmbi" | "bbs" | "tug";
+export type MeasureCode = "walk_distance" | "walk_10m" | "sts5" | "single_leg" | "pain_nrs" | "fim" | "kmbi" | "bbs" | "tug";
 
 export type MeasureDef = {
   code: MeasureCode;
@@ -24,6 +24,7 @@ export const MEASURES: MeasureDef[] = [
   { code: "single_leg", label: "한 발 서기", unit: "초", method: "지지 없이 유지(좌우 중 짧은 쪽)", higherIsBetter: true },
   { code: "pain_nrs", label: "통증 자가 보고", unit: "/10", method: "NRS 0~10", higherIsBetter: false, max: 10 },
   // 표준 평가 도구 (협력 병원 서식에 맞춰 확정)
+  { code: "fim", label: "FIM 기능적 독립성", unit: "점", method: "병원에서 정한 FIM 평가 방법·점수 기준을 함께 기록", higherIsBetter: true, assessOnly: true },
   { code: "kmbi", label: "K-MBI 일상생활", unit: "점", method: "수정 바델지수 0~100", higherIsBetter: true, max: 100, assessOnly: true },
   { code: "bbs", label: "BBS 균형", unit: "점", method: "버그 균형 척도 0~56", higherIsBetter: true, max: 56, assessOnly: true },
   { code: "tug", label: "TUG 일어나 걷기", unit: "초", method: "의자에서 일어나 3m 왕복 후 앉기", higherIsBetter: false, assessOnly: true },
@@ -63,7 +64,7 @@ export function measuredCodes(records: CareRecord[]) {
 /** 진행된 회차인데 보고서가 없는 대상 (기획서 2장: 운영 화면은 기록 누락을 먼저 보여줍니다) */
 export function missingReports(state: CareState, today: string, filter?: (patientId: string) => boolean) {
   return state.patients.filter(p => p.status === "진행 중" && p.nextDate < today && (!filter || filter(p.id))
-    && !state.records.some(r => r.patientId === p.id && r.date === p.nextDate));
+    && !state.records.some(r => r.patientId === p.id && r.date === p.nextDate && r.confirmed));
 }
 
 const fmt = (code: string, v: number | null) => { const d = measureDef(code); return v === null ? "미측정" : `${v}${d?.unit ?? ""}`; };

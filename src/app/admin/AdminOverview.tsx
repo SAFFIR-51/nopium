@@ -1,7 +1,9 @@
 "use client";
-import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Modal } from "@/components/CareUI";
+import { mutationFailed } from "@/lib/repo";
+import Link from "next/link";
+import { type ReactNode } from "react";
 import { BusinessTable, BusinessStatus } from "@/components/BusinessTable";
 import { won } from "@/lib/billing";
 import { careRepo } from "@/lib/repo";
@@ -36,8 +38,9 @@ export function AdminOverview() {
     return { c, active: pts.filter(p => p.status === "진행 중").length, total: pts.length, visits: cur?.visits ?? 0, amount: cur?.total ?? 0 };
   });
 
+
   return <div className="hospital-registry admin-erp">
-    <AdminHeading title="운영 현황" subtitle="병원 연계형 운영: 담당 배정은 병원이 하고, NOPIUM 운영팀은 수수료·진행 현황·문의를 관리합니다." action={<button className="btn-ghost" onClick={() => setReset(true)}>체험 데이터 초기화</button>} />
+    <AdminHeading title="운영 현황" subtitle="병원 연계형 운영: 담당 배정은 병원이 하고, NPIUM 운영팀은 수수료·진행 현황·문의를 관리합니다." action={<button className="btn-ghost" onClick={() => setReset(true)}>체험 데이터 초기화</button>} />
     <div className="business-summary">
       <div><small>방문재활 진행 중</small><b>{active}<span>명</span></b></div>
       <div><small>이번 달 방문 회차</small><b>{monthVisits}<span>회</span></b></div>
@@ -56,6 +59,8 @@ export function AdminOverview() {
         {orgs.map(o => <tr key={o.c.organization}><td><b>{o.c.organization}</b><small>담당 {o.c.manager}</small></td><td className="business-nowrap">{o.c.model === "회차당" ? `회차당 ${won(o.c.unitFee)}` : `월 ${won(o.c.monthlyFee)}`}</td><td className="business-number">{o.active}명</td><td className="business-number">{o.total}명</td><td className="business-number">{o.visits}회</td><td className="business-number">{won(o.amount)}</td><td className="business-number">{ending.filter(p => p.hospital === o.c.organization).length}명</td></tr>)}
       </BusinessTable>
     </section>
-    {reset && <Modal title="체험 데이터를 초기화할까요?" onClose={() => setReset(false)}><p className="modal-lead">이 브라우저에서 추가한 신청과 기록이 기본 예시로 돌아갑니다.</p><button className="btn-primary wide" onClick={() => { careRepo.reset(); setReset(false); }}>예시 데이터로 초기화</button></Modal>}
-  </div>;
+
+
+    {reset && <Modal title="체험 데이터를 초기화할까요?" onClose={() => setReset(false)}><p className="modal-lead">이 브라우저에서 추가한 신청과 기록이 기본 예시로 돌아갑니다.</p><button className="btn-primary wide" onClick={async () => { if (mutationFailed(await careRepo.reset())) return; setReset(false); }}>예시 데이터로 초기화</button></Modal>}
+</div>;
 }

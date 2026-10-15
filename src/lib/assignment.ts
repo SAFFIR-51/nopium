@@ -7,6 +7,17 @@ export function assignmentHistory(state: CareState, patientId: string): Assignme
     .sort((a, b) => (b.respondedAt ?? b.createdAt).localeCompare(a.respondedAt ?? a.createdAt));
 }
 
+export function matchingStatus(state: CareState, patientId: string) {
+  const p = state.patients.find(p => p.id === patientId);
+  const a = assignmentHistory(state, patientId)[0];
+  if (p?.status === "종료") return "종료";
+  if (a?.status === "제안") return "치료사 응답 대기";
+  if (a?.status === "수락") return "NPIUM 확인 대기";
+  if (a?.status === "거절") return "재배정 필요";
+  if (a?.status === "확정") return "매칭 확정";
+  return p?.providerId ? "기존 배정 확인 필요" : "미배정";
+}
+
 /** 배정 대기 중인 대상의 현재 배정 단계. */
 export function assignmentStage(state: CareState, patientId: string): "미배정" | "응답 대기" | "재배정 필요" | null {
   const patient = state.patients.find(p => p.id === patientId);

@@ -1,11 +1,12 @@
 "use client";
+import { getAccount } from "./auth-client";
 import { missingReports } from "@/lib/measures";
 import { useSyncExternalStore } from "react";
 import { visiblePatients } from "@/lib/access";
 import { threadsFor } from "@/lib/chat";
 import { assignmentHistory, assignmentStage } from "@/lib/assignment";
 import { useCare, type CareState } from "@/lib/repo";
-import { DEMO_ACCOUNTS, demoProvider, type Role } from "@/lib/session";
+import { DEMO_ACCOUNTS, DEMO_MODE, demoProvider, type Role } from "@/lib/session";
 import { useToday } from "@/lib/use-today";
 
 export type Notice = { id: string; text: string; href: string };
@@ -29,7 +30,7 @@ export function buildNotices(state: CareState, role: Role, today: string): Notic
       if (p.status === "승인 대기") out.push({ id: `appr-${p.id}`, text: `${p.name} 님 담당 전문가가 배정됐어요. 계획을 확인하고 있어요.`, href: "/my/requests" });
     }
   } else if (role === "provider") {
-    const me = demoProvider();
+    const me = DEMO_MODE ? demoProvider() : { id: getAccount()?.providerId };
     for (const p of state.patients.filter(x => x.status === "배정 대기" && (!x.requestedProviderId || x.requestedProviderId === me?.id))) out.push({ id: `req-${p.id}`, text: `${p.name} 님 배정 요청이 도착했어요.`, href: "/expert/requests" });
     for (const r of state.scheduleRequests.filter(x => x.status === "요청")) { const p = state.patients.find(x => x.id === r.patientId && x.providerId === me?.id); if (p) out.push({ id: `srq-${r.id}`, text: `${p.name} 님 보호자가 ${r.kind === "변경" ? "일정 변경을 요청했어요" : "참여 어려움을 알렸어요"}.`, href: "/expert" }); }
     for (const p of state.patients.filter(x => x.providerId === me?.id && x.approval?.status === "반려" && x.status === "승인 대기")) out.push({ id: `rej-${p.id}-${p.approval?.at}`, text: `${p.name} 님 계획에 보완 요청이 있어요.`, href: `/expert/patients/${p.id}` });
@@ -37,14 +38,15 @@ export function buildNotices(state: CareState, role: Role, today: string): Notic
   } else if (role === "hospital") {
     const mine = visiblePatients(state, "hospital");
     const ids = new Set(mine.map(p => p.id));
-    for (const p of mine.filter(x => x.status === "배정 대기" && assignmentStage(state, x.id) !== "응답 대기")) out.push({ id: `hs-as-${p.id}-${assignmentHistory(state, p.id)[0]?.id ?? "new"}`, text: assignmentStage(state, p.id) === "재배정 필요" ? `${p.name} 님 배정 요청이 거절됐어요. 다른 치료사를 배정해 주세요.` : `${p.name} 님 담당 치료사를 배정해 주세요.`, href: "/hospital" });
-    for (const p of mine.filter(x => x.status === "승인 대기" && x.approval?.status !== "반려" && state.assessments.some(a => a.patientId === x.id && a.period === "초기 평가"))) out.push({ id: `rv-${p.id}`, text: `${p.name} 님 방문 전 평가가 끝났어요. 처방 확인이 필요해요.`, href: "/hospital/approvals" });
+    for (const p of mine.filter(x => x.status === "배정 대기" && assignmentStage(state, x.id) !== "응답 대기")) out.push({ id: `hs-as-${p.id}-${assignmentHistory(state, p.id)[0]?.id ?? "new"}`, text: assignmentStage(state, p.id) === "재배정 필요" ? `${p.name} 님 매칭 조정이 필요합니다. NPIUM 처리 상태를 확인해 주세요.` : `${p.name} 님 NPIUM 매칭 상태를 확인해 주세요.`, href: "/hospital" });
+    for (const p of mine.filter(x => x.status === "승인 대기" && x.approval?.status !== "반려")) out.push({ id: `rv-${p.id}`, text: `${p.name} 님 방문 전 평가가 끝났어요. 처방 확인이 필요해요.`, href: "/hospital/approvals" });
     // 알림에는 건강 정보를 넣지 않습니다: "이상 반응 기록" 사실만 알리고 내용은 화면에서 확인합니다.
     for (const r of state.records.filter(x => ids.has(x.patientId) && x.confirmed && x.adverse?.occurred && !x.adverse.reviewedBy)) { const p = mine.find(x => x.id === r.patientId)!; out.push({ id: `hs-ad-${r.id}`, text: `${p.name} 님 회차 보고서에 이상 반응 기록이 있어요. 담당 의사 확인이 필요해요.`, href: "/hospital" }); }
     for (const p of mine.filter(x => x.status === "진행 중" && state.assessments.some(a => a.patientId === x.id && a.period === "사후 평가"))) out.push({ id: `hs-cl-${p.id}`, text: `${p.name} 님 종료 평가가 끝났어요. 종료를 확인해 주세요.`, href: "/hospital" });
-    for (const r of state.reports.filter(x => x.shared)) { const p = state.patients.find(x => x.id === r.patientId); if (p && p.hospital === DEMO_ACCOUNTS.hospital.organization) out.push({ id: `sh-${r.id}`, text: `${p.name} 님 ${r.period} 보고서가 공유됐어요.`, href: "/hospital/reports" }); }
+    for (const r of state.reports.filter(x => x.shared)) { const p = state.patients.find(x => x.id === r.patientId); if (p && p.hospital === (DEMO_MODE ? DEMO_ACCOUNTS.hospital.organization : getAccount()?.organization)) out.push({ id: `sh-${r.id}`, text: `${p.name} 님 ${r.period} 보고서가 공유됐어요.`, href: "/hospital/reports" }); }
   } else if (role === "admin") {
-    // 운영(ERP): 배정은 병원이 하므로 운영팀에는 문의·정산·검수·기록 누락만 알립니다.
+    // NPIUM 운영자의 통제·확인 사항입니다.
+    for (const p of state.patients.filter(p => p.status === "배정 대기" || state.assignments.find(a => a.patientId === p.id)?.status === "수락")) out.push({ id: `matching-${p.id}`, text: `${p.name} 님 매칭 확인이 필요합니다.`, href: "/admin/assignments" });
     for (const [threadId, meta] of Object.entries(state.inquiries).filter(([, m]) => m.status === "접수")) out.push({ id: `iq-${threadId}-${meta.updatedAt}`, text: `새 문의가 접수됐어요. (${meta.category})`, href: "/admin/inquiries" });
     for (const [key, b] of Object.entries(state.billing).filter(([, b]) => b.status === "청구 완료")) out.push({ id: `bill-${key}`, text: `${key.replace("|", " ")} 이용료 입금을 확인해 주세요.${b.issuedAt ? ` (청구 ${b.issuedAt})` : ""}`, href: "/admin/billing" });
     for (const a of state.applications.filter(x => x.status === "검수 대기")) out.push({ id: `ap-${a.id}`, text: `${a.name} 님 전문가 가입 신청을 검수해 주세요.`, href: "/admin/providers" });
@@ -54,7 +56,7 @@ export function buildNotices(state: CareState, role: Role, today: string): Notic
 }
 
 // 읽은 알림(체험용, 브라우저에만 저장)
-const KEY = "nopium-demo-seen-notices";
+const KEY = "npium-demo-seen-notices";
 const listeners = new Set<() => void>();
 const readSeen = () => { try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; } };
 const subscribe = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };

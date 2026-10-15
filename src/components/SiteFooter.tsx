@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="wrap">
         <div className="footer-cols">
           <div>
-            <Link href="/" className="footer-logo" aria-label="NOPIUM 홈"><Image src="/brand/nopium-wordmark-uppercase-heavy.svg" width={92} height={21} alt="NOPIUM" /></Link>
+            <Link href="/" className="footer-logo" aria-label="NPIUM 홈"><Image src="/brand/npium-wordmark-uppercase-heavy.svg" width={74} height={18} alt="NPIUM" /></Link>
             <p>병원 · 재활 전문가 · 환자를 잇는 퇴원 후 재활 서비스</p>
           </div>
           <div>
@@ -30,7 +30,7 @@ export function SiteFooter() {
         <p className="footer-note">
           이 화면의 전문가·병원·후기·수치는 모두 시안용 예시입니다. 입력과 변경은 이 브라우저의 체험 데이터에만 반영되며 실제 기관에 전송되지 않습니다.
         </p>
-        <p className="footer-copy">© 2026 NOPIUM</p>
+        <p className="footer-copy">© 2026 NPIUM</p>
       </div>
     </footer>
   );

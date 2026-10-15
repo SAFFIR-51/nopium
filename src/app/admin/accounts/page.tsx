@@ -1,0 +1,19 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useCare } from "@/lib/repo";
+import { DEMO_MODE, ROLE_INFO } from "@/lib/session";
+import type { Account } from "@/lib/account";
+import { AdminHeading } from "../AdminShell";
+export default function Accounts() {
+  const state = useCare();
+  const [accounts, setAccounts] = useState<(Account & { disabled: number })[]>([]), [message, setMessage] = useState(""), [role, setRole] = useState("hospital"), [audit, setAudit] = useState<{ accountId: string; command: string; revision: number; at: string }[]>([]);
+  async function load() { const r = await fetch("/api/accounts", { cache: "no-store" }); if (r.ok) { const d = await r.json(); setAccounts(d.accounts); setAudit(d.audit); } }
+  useEffect(() => { if (DEMO_MODE) return; let live = true; fetch("/api/accounts", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => { if (d && live) { setAccounts(d.accounts); setAudit(d.audit); } }).catch(() => {}); return () => { live = false; }; }, []);
+  async function post(input: object) { try { const r = await fetch("/api/accounts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) }); const d = await r.json(); setMessage(r.ok ? "처리했습니다." : d.error || "처리하지 못했습니다."); if (r.ok) await load(); return r.ok; } catch { setMessage("서버에 연결하지 못했습니다."); return false; } }
+  return <><AdminHeading title="계정·접근 관리" subtitle="병원 소속·치료사·환자 연결을 서버 계정에 지정합니다." />{DEMO_MODE ? <p>서버 모드에서 계정을 관리할 수 있습니다.</p> : <>
+    <form className="care-form" onSubmit={async e => { e.preventDefault(); const form = e.currentTarget, f = new FormData(form); if (await post(Object.fromEntries(f.entries()))) form.reset(); }}><h2>계정 생성</h2><label>역할<select name="role" value={role} onChange={e => setRole(e.target.value)}>{["hospital", "provider", "patient", "admin"].map(r => <option key={r} value={r}>{ROLE_INFO[r as Account["role"]].label}</option>)}</select></label><label>계정 ID<input name="username" pattern="[a-zA-Z0-9._-]{3,80}" required /></label><label>표시 이름<input name="name" required /></label><label>초기 비밀번호<input name="password" type="password" minLength={12} maxLength={128} required autoComplete="new-password" /></label>{role === "hospital" && <label>소속 병원<input name="organization" required /></label>}{role === "provider" && <label>등록 치료사<select name="providerId" required><option value="">선택</option>{state.registeredProviders.map(p => <option key={p.id} value={p.id}>{p.name} · {p.id}</option>)}</select></label>}<button className="btn-primary">계정 생성</button></form>
+    <form className="care-form" onSubmit={async e => { e.preventDefault(); const f = new FormData(e.currentTarget); const r = await fetch("/api/care", { cache: "no-store" }); if (r.ok) await post({ action: "link", patientId: f.get("patientId"), accountId: f.get("accountId"), revision: (await r.json()).revision }); }}><h2>환자·보호자 계정 연결</h2><label>환자<select name="patientId" required>{state.patients.map(p => <option key={p.id} value={p.id}>{p.name} · {p.hospital}</option>)}</select></label><label>계정<select name="accountId" required>{accounts.filter(a => a.role === "patient" && !a.disabled).map(a => <option key={a.id} value={a.id}>{a.name} · {a.username}</option>)}</select></label><button className="btn-primary">연결</button></form>
+    <h2>계정 목록</h2>{accounts.map(a => <p key={a.id}>{a.username} · {a.name} · {ROLE_INFO[a.role].label} · {a.organization || a.providerId} · {a.disabled ? "비활성" : "활성"} <button onClick={() => post({ action: "disable", id: a.id, disabled: !a.disabled })}>{a.disabled ? "활성화" : "비활성화"}</button></p>)}
+    <h2>최근 서버 처리 이력</h2>{audit.map(r => <p key={r.revision + r.command}>{r.revision} · {r.command} · {accounts.find(a => a.id === r.accountId)?.name || r.accountId} · {r.at}</p>)}
+  </>}{message && <p role="status">{message}</p>}</>;
+}

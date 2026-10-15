@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import "./partner.css";
 
-export const metadata: Metadata = { title: "전문가 가입 | NOPIUM", description: "퇴원 후 재활이 필요한 분들과 가까운 곳에서 만나세요. NOPIUM 재활·운동 전문가 가입 안내." };
+export const metadata: Metadata = { title: "전문가 가입 | NPIUM", description: "퇴원 후 재활이 필요한 분들과 가까운 곳에서 만나세요. NPIUM 재활·운동 전문가 가입 안내." };
 
 const steps = [
   { title: "가입하고 자격을 확인받아요", text: "면허·경력과 배상책임보험을 등록하면 운영자가 검수한 뒤 활동을 시작할 수 있어요." },
@@ -26,15 +26,15 @@ export default function PartnerPage() {
   return <div className="partner-page">
     <section className="partner-hero">
       <div className="partner-wrap">
-        <p className="partner-eyebrow">NOPIUM PARTNER</p>
+        <p className="partner-eyebrow">NPIUM PARTNER</p>
         <h1>퇴원 후 재활이 필요한 분들과<br />가장 가까운 곳에서 만나세요</h1>
-        <p>병원 밖에서도 이어지는 재활, NOPIUM 전문가로 함께해 주세요.</p>
+        <p>병원 밖에서도 이어지는 재활, NPIUM 전문가로 함께해 주세요.</p>
         <Link href="/partner/join" className="partner-cta">전문가 가입하기</Link>
       </div>
     </section>
     <section className="partner-section">
       <div className="partner-wrap">
-        <h2>NOPIUM에서 활동하는 방법</h2>
+        <h2>NPIUM에서 활동하는 방법</h2>
         <ol className="partner-steps">{steps.map((s, i) => <li key={s.title}><span>STEP {i + 1}</span><h3>{s.title}</h3><p>{s.text}</p></li>)}</ol>
       </div>
     </section>

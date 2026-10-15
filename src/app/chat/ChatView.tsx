@@ -1,4 +1,5 @@
 "use client";
+import { mutationFailed } from "@/lib/repo";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -40,7 +41,7 @@ export function ChatView() {
   if (!me) return <div className="chat-page"><div className="chat-wrap"><LoginNeeded what="채팅" /></div></div>;
 
   const open = (id: string) => { if (id !== current?.id) setDraft(""); router.replace(`${path}?c=${id}`, { scroll: false }); };
-  const send = () => { if (!current || current.closed || !draft.trim()) return; careRepo.sendMessage(current.id, me, draft); setDraft(""); };
+  const send = async () => { if (!current || current.closed || !draft.trim()) return; if (mutationFailed(await careRepo.sendMessage(current.id, me, draft))) return; setDraft(""); };
 
   let lastDay = "";
   return <div className="chat-page"><div className="chat-wrap">

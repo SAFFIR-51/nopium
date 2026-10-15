@@ -1,0 +1,20 @@
+require('./register.cjs');
+const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path'),{randomUUID}=require('node:crypto');
+process.env.NEXT_PUBLIC_DEMO_MODE='false';
+process.env.NPIUM_DB_PATH=path.resolve('test-results',`api-${randomUUID()}.sqlite`);
+const {createAccount,db,readState}=require('../src/lib/server/database.ts');
+const {sameOrigin}=require('../src/lib/server/http.ts');
+const session=require('../src/app/api/session/route.ts'),care=require('../src/app/api/care/route.ts');
+const origin='http://127.0.0.1:3100';
+const req=(route,method='GET',input,cookie='',foreign=false)=>new Request(origin+route,{method,headers:{origin:foreign?'https://other.invalid':origin,'Content-Type':'application/json',cookie},...(input?{body:JSON.stringify(input)}:{})});
+test('실제 API가 로그인·세션 폐기·동시 수정·요청 출처·역할 권한을 검증한다',async()=>{
+ assert.equal(sameOrigin(new Request('http://localhost:3100/api/session',{headers:{host:'127.0.0.1:3100',origin:'http://127.0.0.1:3100'}})),true);
+ const password=randomUUID()+'-test';createAccount({id:'admin',username:'admin-test',name:'테스트 관리자',role:'admin',organization:'',providerId:'',password});createAccount({id:'hospital',username:'hospital-test',name:'테스트 병원 담당자',role:'hospital',organization:'병원A',providerId:'',password});
+ assert.equal((await care.GET(req('/api/care'))).status,401);
+ assert.equal((await session.POST(req('/api/session','POST',{username:'admin-test',password:'wrong'}))).status,401);
+ const logged=await session.POST(req('/api/session','POST',{username:'admin-test',password}));assert.equal(logged.status,200);const cookie=logged.headers.get('set-cookie').split(';')[0];assert.match(logged.headers.get('set-cookie'),/HttpOnly/);
+ const input={command:'setContract',args:['병원A',{model:'회차당',unitFee:1000,since:'2026-01-01'}],revision:0};assert.equal((await care.POST(req('/api/care','POST',input,cookie,true))).status,400);
+ let r=await care.POST(req('/api/care','POST',input,cookie));assert.equal(r.status,200);assert.equal((await r.json()).revision,1);assert.equal((await care.POST(req('/api/care','POST',input,cookie))).status,409);
+ const hospital=await session.POST(req('/api/session','POST',{username:'hospital-test',password})),hc=hospital.headers.get('set-cookie').split(';')[0];assert.equal((await care.POST(req('/api/care','POST',{...input,revision:1},hc))).status,400);assert.equal((await care.GET(req('/api/care','GET',null,hc))).status,200);
+ await session.DELETE(req('/api/session','DELETE',null,cookie));assert.equal((await care.GET(req('/api/care','GET',null,cookie))).status,401);assert.notEqual(db().prepare('SELECT hash FROM accounts WHERE id=?').get('admin').hash,password);assert.equal(readState().revision,1);
+});

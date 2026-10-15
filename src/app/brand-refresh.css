@@ -1,6 +1,6 @@
 .reference-header .logo img,.footer-logo img {
-  width: 92px !important;
-  height: 21px !important;
+  width: 74px !important;
+  height: 18px !important;
   object-fit: contain;
 }
 
@@ -20,6 +20,6 @@
 }
 
 @media(max-width:700px) {
-  .reference-header .logo img { width: 85px !important; height: 20px !important; }
+  .reference-header .logo img { width: 68px !important; height: 17px !important; }
   .masthead-photo { width: 98px; height: 107px; right: 15px; bottom: 16px; opacity: 1; }
 }

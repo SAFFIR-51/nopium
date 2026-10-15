@@ -1,8 +1,13 @@
 "use client";
+import { usePageValue, usePageItem } from "@/lib/page-view";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { AssessmentForm, ReportView, savedTimeLabel } from "@/components/CareUI";
+import { savedTimeLabel } from "@/components/CareUI";
+import { ReportView } from "@/components/reports/ReportView";
+import { AssessmentForm } from "@/components/AssessmentForm";
+import { AssessmentCompare, AssessmentDetail } from "@/components/AssessmentCompare";
+import { assessmentSummary, sortedAssessments } from "@/lib/assessment";
 import { Icon } from "@/components/Icon";
 import { SessionReportForm } from "@/components/SessionReportForm";
 import { SessionReportCard } from "@/components/SessionReportCard";
@@ -11,8 +16,8 @@ import { StageSteps } from "@/components/StageSteps";
 import { daysLeft, programStage, visitsInWeek } from "@/lib/program";
 import { measureDef, recordMeasures } from "@/lib/measures";
 import { PlaceInfo } from "@/components/PlaceInfo";
+import { ContraBox } from "@/components/ContraBox";
 import { useToday } from "@/lib/use-today";
-import type { CareRecord } from "@/lib/repo";
 import { ExpertSubHeader } from "../../ExpertShell";
 import { useProviderCare } from "../../use-provider-care";
 
@@ -27,11 +32,11 @@ const SHOW = 4;
 export function PatientDetail() {
   const { id } = useParams<{ id: string }>();
   const data = useProviderCare();
-  const [modal, setModal] = useState<"record" | "assessment" | "initial" | "final" | "report" | null>(null);
+  const [modal, setModal] = usePageValue<"record" | "assessment" | "initial" | "final" | "report">("care");
   const [all, setAll] = useState(false);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const today = useToday();
-  const [correcting, setCorrecting] = useState<CareRecord | null>(null);
+  const [correcting, setCorrecting] = usePageItem("record-correction", (data?.state.records ?? []).filter(r => r.patientId === id), r => r.id);
   if (!data) return null;
   const patient = data.patients.find(p => p.id === id);
   // 담당 대상이 아니면 내용을 보여주지 않습니다. (서버 구현에서는 서버에서 차단)
@@ -40,7 +45,9 @@ export function PatientDetail() {
   const confirmed = records.filter(r => r.confirmed).length;
   const shown = all ? records : records.slice(0, SHOW);
   const latestId = records.find(r => r.confirmed)?.id;
-  const assessments = data.state.assessments.filter(a => a.patientId === patient.id);
+  const assessments = sortedAssessments(data.state.assessments.filter(a => a.patientId === patient.id));
+  const firstAssessment = assessments.find(a => a.period === "초기 평가") ?? assessments[0];
+  const lastAssessment = assessments.length > 1 ? assessments[assessments.length - 1] : undefined;
   const hasDraft = records.some(r => !r.confirmed);
   const stage = programStage(data.state, patient, today);
   // 의사 확인(처방) 전에는 회차 보고서를 쓸 수 없습니다. (의료기사법: 의사 지도 아래에서만 방문)
@@ -60,6 +67,12 @@ export function PatientDetail() {
     ended && patient.closure && { icon: "check" as const, text: `${patient.closure.by} 종료 확인 · ${patient.closure.summary}` },
   ].filter(Boolean) as { icon: "chat" | "shield" | "check"; text: string }[];
 
+  if (modal === "record") return <SessionReportForm patient={patient} author={data.ref} onClose={() => setModal(null)} />;
+  if (modal === "assessment") return <AssessmentForm patient={patient} by={data.ref.name} onClose={() => setModal(null)} />;
+  if (modal === "initial") return <AssessmentForm patient={patient} period="초기 평가" by={data.ref.name} onClose={() => setModal(null)} />;
+  if (modal === "final") return <AssessmentForm patient={patient} period="사후 평가" by={data.ref.name} onClose={() => setModal(null)} />;
+  if (modal === "report") return <ReportView patient={patient} onClose={() => setModal(null)} />;
+  if (correcting) return <SessionReportForm patient={patient} author={data.ref} correcting={correcting} onClose={() => setCorrecting(null)} />;
   return <div className="sg sg-work my-home my-sub-view">
     <ExpertSubHeader title={`${patient.name} 님`} subtitle={`${patient.age}세 · ${patient.sex} · ${patient.hospital}`} back="/expert/patients" backLabel="담당 대상으로 돌아가기" />
 
@@ -82,6 +95,7 @@ export function PatientDetail() {
       <PlaceInfo patient={patient} full={!ended} changed={!!patient.nextPlace} />
       {patient.homeAccess && !ended && <p className="sg-caution"><Icon name="pin" size={14} />{patient.homeAccess} · 출입 비밀번호는 채팅으로만 받아요</p>}
       <p className="sg-caution"><Icon name="shield" size={14} />{patient.precautions}</p>
+      {!ended && <ContraBox rx={rx} showOpinion />}
       <div className="sg-actions"><Link href={`/chat?c=care-${patient.id}`}>보호자와 채팅</Link>{stageAction}</div>
     </section>
 
@@ -104,9 +118,11 @@ export function PatientDetail() {
     <section className="sg-card"><MeasureTrend records={records} /></section>
 
     <h2 className="sg-title">평가 기록 <span>{assessments.length}</span>{canRecord && <button className="sg-btn" style={{ marginLeft: "auto" }} onClick={() => setModal("assessment")}>중간 평가 기록</button>}</h2>
-    {assessments.length ? <section className="sg-card sg-list">{assessments.map(a => <div className="sg-list-static" key={a.id}><span style={{ minWidth: 0 }}>
-      <b>{a.period} · {a.date}</b>
-      <small>{[...(a.measures ?? []).map(m => `${measureDef(m.code)?.label ?? m.code} ${m.value}${measureDef(m.code)?.unit ?? ""}`), a.rom && `ROM ${a.rom}`, a.strength && `근력 ${a.strength}`, a.walking && `보행 ${a.walking}`, a.balance && `균형 ${a.balance}`, a.adl && `ADL ${a.adl}`].filter(Boolean).join(" · ") || "측정 항목 없음"}</small>
+    {lastAssessment && firstAssessment && firstAssessment.id !== lastAssessment.id && <section className="sg-card" style={{ marginBottom: 8 }}><div className="sg-row static"><span><small className="sg-state">변화 비교</small><b>방문 전 → 최근 평가</b></span></div><AssessmentCompare before={firstAssessment} after={lastAssessment} /></section>}
+    {assessments.length ? <section className="sg-card sg-list">{[...assessments].reverse().map(a => <div className="sg-list-static" key={a.id}><span style={{ minWidth: 0 }}>
+      <b>{a.period} · {a.date}{a.by ? ` · ${a.by}` : ""}</b>
+      <small>{(a.measures ?? []).filter(m => m.value !== null).map(m => `${measureDef(m.code)?.label ?? m.code} ${m.value}${measureDef(m.code)?.unit ?? ""}`).join(" · ") || (assessmentSummary(a) ? "" : "측정 항목 없음")}</small>
+      <AssessmentDetail a={a} />
     </span></div>)}</section> : <section className="sg-card sg-empty">방문 전 평가를 기록해 주세요.</section>}
 
     <h2 className="sg-title">목표</h2>
@@ -121,11 +137,11 @@ export function PatientDetail() {
       <Link href={`/chat?c=care-${patient.id}`}><span><b>보호자와 채팅</b><small>일정·출입 방법은 채팅으로만 주고받아요</small></span><Icon name="chevron" size={16} /></Link>
     </section>
 
-    {modal === "record" && <SessionReportForm patient={patient} author={data.ref} onClose={() => setModal(null)} />}
-    {modal === "assessment" && <AssessmentForm patient={patient} by={data.ref.name} onClose={() => setModal(null)} />}
-    {modal === "initial" && <AssessmentForm patient={patient} period="초기 평가" by={data.ref.name} onClose={() => setModal(null)} />}
-    {modal === "final" && <AssessmentForm patient={patient} period="사후 평가" by={data.ref.name} onClose={() => setModal(null)} />}
-    {modal === "report" && <ReportView patient={patient} onClose={() => setModal(null)} />}
-    {correcting && <SessionReportForm patient={patient} author={data.ref} correcting={correcting} onClose={() => setCorrecting(null)} />}
+
+
+
+
+
+
   </div>;
 }

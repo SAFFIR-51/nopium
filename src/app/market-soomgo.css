@@ -449,13 +449,13 @@ img { object-fit: cover; }
   .toast { white-space: normal; width: calc(100% - 32px); }
 }
 
-/* NOPIUM outlined capsule wordmark */
+/* NPIUM outlined capsule wordmark */
 .logo { flex-shrink: 0; gap: 0; background: #315458; border-radius: 999px; line-height: 0; }
 .logo img, .footer-logo img { display: block; width: 186px; height: 40px; }
 .footer-logo { display: inline-flex; background: #315458; border-radius: 999px; margin-bottom: 10px; line-height: 0; }
 @media (max-width: 640px) { .logo img { width: 145px; height: auto; } .header-row { gap: 12px; } }
 
-/* NOPIUM care marketplace and workspaces */
+/* NPIUM care marketplace and workspaces */
 :root{--brand:#207f71;--brand-strong:#17665b;--brand-soft:#edf6f3;--ink:#223536;--ink-2:#617071;--ink-3:#889596;--line:#e3eae7;--bg:#f6f8f7}
 body{background:#fff}button,a,input,select,textarea{transition:background .18s,color .18s,border-color .18s,box-shadow .18s}button:disabled{cursor:not-allowed;opacity:.45}button:not(:disabled):active{transform:translateY(1px)}
 .header{background:#ffffffee;backdrop-filter:blur(16px)}.header-row{height:80px;gap:35px}.logo img{width:166px;height:36px}.nav-login{display:flex;align-items:center;gap:7px;background:#f0f5f3!important;border-radius:999px!important;font-weight:600}.footer-logo{width:max-content}.footer-logo img{object-fit:contain}
@@ -517,7 +517,7 @@ body{background:#fff}button,a,input,select,textarea{transition:background .18s,c
 @media(max-width:820px){.nav-main a{font-size:14px}.nav-main{gap:17px}.header-row{gap:21px}.nav-partner{gap:11px}.referral-panel{gap:30px}.referral-copy h2{font-size:22px}}
 @media(max-width:640px){.header-row{height:auto;min-height:58px;gap:0;padding-top:12px}.logo img,.footer-logo img{width:79px!important;height:23px!important}.nav-main{margin-top:12px;gap:23px}.nav-main a{font-size:13px;font-weight:600}.nav-login{font-size:11px!important;padding:7px 10px!important}.browse-intro{padding-top:27px}.browse-intro h1{font-size:25px;line-height:35px}.browse-intro>p{font-size:12px;line-height:20px}.browse-intro .market-keywords button{font-size:10px}.mode-tabs{margin-top:14px;margin-bottom:10px}.mode-tabs button{width:50%;font-size:14px;padding:12px 5px}.market-categories button span{font-size:10px}.collection-heading h2,.results-heading h2,.market-faq h2{font-size:19px;line-height:27px}.collection-heading p{font-size:11px;line-height:18px}.product-title,.all-product-grid .product-title{font-size:12px;line-height:19px;min-height:38px}.product-provider{font-size:10px}.browse-features h2{font-size:21px;line-height:29px}.feature-label,.feature-link{font-size:10px}.referral-panel{grid-template-columns:1fr;gap:25px;margin:24px 0 40px}.referral-symbol{width:40px;height:40px;border-radius:10px;margin-bottom:16px}.referral-copy h2{font-size:22px;line-height:1.5}.referral-copy>p{font-size:12px;line-height:1.8}.referral-copy ol{display:none}.referral-form-box{padding:23px 20px}.referral-form-box input{font-size:18px}.request-review .request-expert-review{grid-template-columns:76px minmax(0,1fr)}}
 
-/* Shared NOPIUM marketplace language: compact type, white space and clear borders. */
+/* Shared NPIUM marketplace language: compact type, white space and clear borders. */
 :root{--brand:#6935f5;--brand-strong:#5728d8;--brand-soft:#f4efff;--ink:#323744;--ink-2:#626977;--ink-3:#8b929d;--line:#eaebef;--bg:#f4f5f7}
 body{font-size:14px;color:#323744;line-height:1.6}
 .brand-masthead{height:116px;background:#20252e;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-bottom:16px;gap:16px}

@@ -1,4 +1,5 @@
 "use client";
+import { mutationFailed } from "@/lib/repo";
 import Link from "next/link";
 import { useState } from "react";
 import { savedTimeLabel } from "@/components/CareUI";
@@ -39,9 +40,9 @@ export function TodayView() {
   const reports = data.state.records.filter(r => r.confirmed && myIds.has(r.patientId)).length;
   const myRequests = data.state.scheduleRequests.filter(r => r.status === "요청" && myIds.has(r.patientId));
   // 수락하면 일정이 바뀌고(저장소에서 처리), 보호자 대화방에도 결과를 남깁니다.
-  const respond = (id: string, patientId: string, status: "확정" | "조정 필요", text: string) => {
-    careRepo.respondSchedule(id, status, text);
-    careRepo.sendMessage(`care-${patientId}`, { key: data.ref.id, name: data.ref.name }, `[${status === "확정" ? "일정 확정" : "일정 조정 필요"}] ${text}`);
+  const respond = async (id: string, patientId: string, status: "확정" | "조정 필요", text: string) => {
+    if (mutationFailed(await careRepo.respondSchedule(id, status, text))) return;
+    if (mutationFailed(await careRepo.sendMessage(`care-${patientId}`, { key: data.ref.id, name: data.ref.name }, `[${status === "확정" ? "일정 확정" : "일정 조정 필요"}] ${text}`))) return;
   };
 
   const monthKey = today.slice(0, 7);
@@ -60,7 +61,7 @@ export function TodayView() {
       { href: "/expert/patients", title: "담당 대상", sub: `진행 중 ${data.patients.filter(p => p.status === "진행 중").length}명 · 전체 ${data.patients.length}명` },
     ] },
     { title: "문의", items: [
-      { href: `/chat?c=support-${data.provider.id}`, title: "NOPIUM 운영팀", sub: "정산·계정·이용 문의" },
+      { href: `/chat?c=support-${data.provider.id}`, title: "NPIUM 운영팀", sub: "정산·계정·이용 문의" },
     ] },
     { title: "설정", items: [
       { href: "/expert/profile", title: "내 자격·프로필", sub: `${data.provider.license} · 활동 지역 ${data.provider.area}` },
@@ -75,6 +76,7 @@ export function TodayView() {
     { href: "/expert/schedule", icon: "calendar", title: "일정표" },
   ];
   // 에어비앤비 호스트 Today 순서: 지금 처리할 일 → 다가오는 회차 → 쌓인 기록. 숨고형 한 열 목록.
+  if (record) return <SessionReportForm patient={record.patient} defaultDate={record.date} author={data.ref} onClose={() => setRecord(null)} />;
   return <div className="sg sg-work my-home">
     <h1 className="sg-h1">내 관리</h1>
     <section className="sg-profile">
@@ -134,8 +136,8 @@ export function TodayView() {
       <h2 className="sg-title">{g.title}</h2>
       <section className="sg-card sg-list">{g.items.map(i => <Link key={i.title} href={i.href}><span><b>{i.title}</b><small>{i.sub}</small></span><Icon name="chevron" size={16} /></Link>)}</section>
     </div>)}
-    <p className="sg-foot">처방·진료 관련 판단은 담당 의사에게, 이용·정산 문의는 NOPIUM 운영팀으로 해 주세요.</p>
+    <p className="sg-foot">처방·진료 관련 판단은 담당 의사에게, 이용·정산 문의는 NPIUM 운영팀으로 해 주세요.</p>
 
-    {record && <SessionReportForm patient={record.patient} defaultDate={record.date} author={data.ref} onClose={() => setRecord(null)} />}
+
   </div>;
 }
